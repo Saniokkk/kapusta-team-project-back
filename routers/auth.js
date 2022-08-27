@@ -8,11 +8,15 @@ const router = express.Router();
 
 router.post(
   "/register",
-
   validation(joiRegisterSchema),
   cntrWrapper(AuthController.register)
 );
-// router.post("/login", validation(joiLoginSchema), cntrWrapper(cntr.login));
+
+router.post(
+  "/login",
+  validation(joiLoginSchema),
+  cntrWrapper(AuthController.login)
+);
 // router.get("/logout", auth, cntrWrapper(cntr.logout));
 
 module.exports = router;

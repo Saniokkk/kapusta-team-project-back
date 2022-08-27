@@ -1,6 +1,7 @@
-const { Conflict } = require("http-errors");
+const { Conflict, Unauthorized } = require("http-errors");
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 class AuthController {
   async register(req, res) {
@@ -19,6 +20,34 @@ class AuthController {
       status: "success",
       code: 200,
       data: {
+        user: {
+          userEmail,
+        },
+      },
+    });
+  }
+
+  async login(req, res) {
+    const { SECRET_KEY } = process.env;
+    const { userEmail, userPassword } = req.body;
+    const user = await User.findOne({ userEmail });
+    if (!user) {
+      throw new Unauthorized("Email or password is wrong");
+    }
+    const passCompare = bcrypt.compareSync(userPassword, user.userPassword);
+    if (!passCompare) {
+      throw new Unauthorized("Email or password is wrong");
+    }
+    const payload = {
+      id: user._id,
+    };
+    const token = jwt.sign(payload, SECRET_KEY);
+    await User.findByIdAndUpdate(user._id, { token });
+    res.status(200).json({
+      status: "success",
+      code: 200,
+      data: {
+        token,
         user: {
           userEmail,
         },
