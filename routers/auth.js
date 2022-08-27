@@ -17,6 +17,6 @@ router.post(
   validation(joiLoginSchema),
   cntrWrapper(AuthController.login)
 );
-// router.get("/logout", auth, cntrWrapper(cntr.logout));
+router.get("/logout", auth, cntrWrapper(AuthController.logout));
 
 module.exports = router;

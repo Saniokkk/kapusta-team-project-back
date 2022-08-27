@@ -54,6 +54,15 @@ class AuthController {
       },
     });
   }
+
+  async logout(req, res) {
+    const { _id } = req.user;
+    await User.findByIdAndUpdate(_id, { token: null });
+    res.status(200).json({
+      status: `Logout success with id${_id}`,
+      code: 200,
+    });
+  }
 }
 
 module.exports = new AuthController();
