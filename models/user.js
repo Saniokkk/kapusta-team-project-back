@@ -17,25 +17,30 @@ const userSchema = Schema(
       type: String,
       default: null,
     },
+
+    totalBalance: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true, versionKey: false }
 );
 
 const User = model("user", userSchema);
 
+const regVerMeil = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+
 const joiRegisterSchema = Joi.object({
-  userPassword: Joi.string().required(),
-  userEmail: Joi.string().required(),
-  // subscription: Joi.string().valid("starter", "pro", "business"),
+  userPassword: Joi.string().min(6).required(),
+  userEmail: Joi.string().pattern(regVerMeil).required(),
 });
 
-const joiLoginSchema = Joi.object({
-  userPassword: Joi.string().required(),
-  userEmail: Joi.string().required(),
+const balanceSchema = Joi.object({
+  totalBalance: Joi.number().required(),
 });
 
 module.exports = {
   User,
   joiRegisterSchema,
-  joiLoginSchema,
+  balanceSchema,
 };
