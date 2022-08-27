@@ -4,9 +4,9 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const { application } = require("express");
+// const { application } = require("express");
 
-const { authRouter } = require("./routers");
+const { authRouter, googleRouter, balanceRouter } = require("./routers");
 
 const app = express();
 
@@ -18,6 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/users", authRouter);
+// app.use("/api/googleauth", googleRouter);
+app.use("/api/balance", balanceRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
