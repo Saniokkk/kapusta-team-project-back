@@ -139,40 +139,26 @@
         }
       }
     },
-    "/api/balance/curent": {
+    "/api/balance/current": {
       "get": {
         "tags": ["Cash"],
         "summary": "Get user balance",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
-              }
-            }
-          }
-        },
+
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/BalanceResponse"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Email or password is wrong",
+          "404": {
+            "description": "User not found",
             "content": {}
           }
         }
@@ -198,7 +184,6 @@
           }
         }
       },
-      "LogoutRequest": {},
       "RegistrationResponse": {
         "type": "object",
         "properties": {
@@ -212,7 +197,7 @@
           "status": "success",
           "code": 200,
           "data": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMGE3NDQxYjhlZDFmZjhhOGE0MDNlZSIsImlhdCI6MTY2MTY2NjgwNH0.bHHk89ebEe9Gm2DvAdDcb_M67xaSB-_s0YnfdN679QU",
+            "token": "89ebEe9Gm2DvAdDcb_M67xaSB-_s0YnfdN679QU",
             "user": {
               "userEmail": "user@example.com"
             }
@@ -232,11 +217,41 @@
             "description": "code",
             "example": "200"
           }
+        },
+        "example": {
+          "status": "Logout success with id630a7441b8ed1ff8a8a403ee",
+          "code": 200
         }
       },
-      "example": {
-        "status": "Logout success with id630a7441b8ed1ff8a8a403ee",
-        "code": 200
+
+      "BalanceResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "message",
+            "example": "success"
+          },
+          "code": {
+            "type": "number",
+            "description": "code",
+            "example": "200"
+          },
+          "data": {
+            "type": "object",
+            "description": "response",
+            "example": {
+              "totalBalance": 1100
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "code": 200,
+          "data": {
+            "totalBalance": 1100
+          }
+        }
       }
     },
 
