@@ -15,7 +15,7 @@ router.post("/", auth, cntrWrapper(TransactionController.addTransaction));
 // delete transaction by id
 router.delete(
   "/:transactionId",
-  auth,
+
   cntrWrapper(TransactionController.removeTransaction)
 );
 module.exports = router;

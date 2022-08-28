@@ -27,8 +27,8 @@
       "description": "Cash endpoints"
     },
     {
-      "name": "Summary cash",
-      "description": "Summary cash endpoints"
+      "name": "Transaction",
+      "description": "Transaction endpoints"
     }
   ],
   "paths": {
@@ -181,6 +181,87 @@
             }
           }
         },
+
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/transactions": {
+      "get": {
+        "tags": ["Transaction"],
+        "summary": "Get all trasaction",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      },
+
+      "post": {
+        "tags": ["Transaction"],
+        "summary": "Add trasaction",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      },
+
+      "delete": {
+        "tags": ["Transaction"],
+        "summary": "Delete trasaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "type": "string",
+            "description": "transaction id"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
 
         "responses": {
           "201": {
