@@ -34,6 +34,7 @@
     "morgan": "1.10.0",
     "nanoid": "^3.3.4",
     "nodemon": "^2.0.19",
-    "query-string": "^7.1.1"
+    "query-string": "^7.1.1",
+    "swagger-ui-express": "^4.5.0"
   }
 }
