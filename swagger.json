@@ -163,6 +163,42 @@
           }
         }
       }
+    },
+    "/api/balance/update": {
+      "patch": {
+        "tags": ["Cash"],
+        "summary": "Update balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Balance object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBalanceRequest"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      }
     }
   },
 
@@ -181,6 +217,17 @@
             "type": "string",
             "description": "User's password",
             "example": "qwerty123"
+          }
+        }
+      },
+      "UpdateBalanceRequest": {
+        "type": "object",
+        "required": ["userEmail", "userPassword"],
+        "properties": {
+          "totalBalance": {
+            "type": "number",
+            "description": "User's balance",
+            "example": 11111
           }
         }
       },
