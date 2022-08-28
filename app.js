@@ -8,7 +8,12 @@ require("dotenv").config();
 
 // const { application } = require("express");
 
-const { authRouter, googleRouter, balanceRouter } = require("./routers");
+const {
+  authRouter,
+  googleRouter,
+  balanceRouter,
+  transactionsRouter,
+} = require("./routers");
 
 const app = express();
 
@@ -23,6 +28,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/users", authRouter);
 // app.use("/api/googleauth", googleRouter);
 app.use("/api/balance", balanceRouter);
+app.use("/api/transactions", transactionsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
