@@ -247,8 +247,9 @@
             "content": {}
           }
         }
-      },
-
+      }
+    },
+    "/api/transactions/{transactionId}": {
       "delete": {
         "tags": ["Transaction"],
         "summary": "Delete trasaction",
