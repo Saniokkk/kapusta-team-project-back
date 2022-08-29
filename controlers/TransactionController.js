@@ -1,6 +1,5 @@
 const { Transaction, User } = require("../models");
 
-
 class TransactionController {
   async addTransaction(req, res) {
     const { _id, totalBalance } = req.user;
@@ -22,11 +21,20 @@ class TransactionController {
         totalBalance: newBalance,
       },
     });
-
-
   }
   async getAllTransaction(req, res) {
-    res.send("get transaction");
+    const { _id: owner } = req.user;
+    const result = await Transaction.find({ owner }).populate(
+      "owner",
+      "_id, email"
+    );
+    res.status(200).json({
+      status: "success",
+      code: 200,
+      data: {
+        result,
+      },
+    });
   }
   async removeTransaction(req, res) {
     res.send("remove transaction");
