@@ -1,4 +1,5 @@
 const { Transaction, User } = require("../models");
+const createError = require("../helpers/createError");
 
 class TransactionController {
   async addTransaction(req, res) {
@@ -37,7 +38,28 @@ class TransactionController {
     });
   }
   async removeTransaction(req, res) {
-    res.send("remove transaction");
+    const { transactionId } = req.params;
+    const { _id, totalBalance } = req.user;
+
+    const { type, sum } = await Transaction.findByIdAndRemove(transactionId);
+
+    if (!sum) {
+      throw createError(404, "Not Found");
+    }
+
+    const newBalance =
+      type === "income" ? totalBalance - sum : totalBalance + sum;
+
+    await User.findByIdAndUpdate({ _id }, { totalBalance: newBalance });
+
+    res.status(200).json({
+      status: "success",
+      code: 200,
+      data: {
+        message: `Transaaction with ID${transactionId} deleted`,
+        newBalance,
+      },
+    });
   }
 }
 
