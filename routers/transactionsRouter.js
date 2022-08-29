@@ -1,8 +1,8 @@
 const express = require("express");
 
-const { auth } = require("../middlewares");
-const { cntrWrapper } = require("../middlewares");
+const { auth, cntrWrapper, validation } = require("../middlewares");
 const { TransactionController } = require("../controlers");
+const { transactionJoiSchema } = require("../models/transaction");
 
 const router = express.Router();
 
@@ -10,12 +10,19 @@ const router = express.Router();
 router.get("/", auth, cntrWrapper(TransactionController.getAllTransaction));
 
 // create new transaction
-router.post("/", auth, cntrWrapper(TransactionController.addTransaction));
+
+router.post(
+  "/",
+  auth,
+  validation(transactionJoiSchema),
+  cntrWrapper(TransactionController.addTransaction)
+);
 
 // delete transaction by id
 router.delete(
   "/:transactionId",
-
+  auth,
   cntrWrapper(TransactionController.removeTransaction)
 );
+
 module.exports = router;

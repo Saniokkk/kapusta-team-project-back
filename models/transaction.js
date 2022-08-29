@@ -1,11 +1,18 @@
 const { Schema, model } = require("mongoose");
+const Joi = require("joi");
 
 const transactionSchema = Schema(
   {
-    description: {
-      type: String,
+    date: {
+      type: Date,
       required: true,
     },
+    
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+
     category: {
       type: String,
       required: true,
@@ -34,14 +41,7 @@ const transactionSchema = Schema(
       required: true,
       enum: ["income", "expense"],
     },
-    date: {
-      type: Date,
-      required: true,
-    },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
-    },
+
   },
   {
     versionKey: false,
@@ -51,4 +51,15 @@ const transactionSchema = Schema(
 
 const Transaction = model("transaction", transactionSchema);
 
-module.exports = Transaction;
+
+const transactionJoiSchema = Joi.object({
+  description: Joi.string().required(),
+  category: Joi.string().required(),
+  sum: Joi.number().required(),
+  type: Joi.string().required(),
+  date: Joi.date().required(),
+  owner: Joi.string(),
+});
+
+module.exports = { Transaction, transactionJoiSchema };
+
