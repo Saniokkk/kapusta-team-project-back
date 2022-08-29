@@ -16,9 +16,9 @@ class AuthController {
       userEmail,
       userPassword: hashPassword,
     });
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
-      code: 200,
+      code: 201,
       data: {
         user: {
           userEmail,

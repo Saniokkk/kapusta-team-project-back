@@ -7,15 +7,10 @@ const transactionSchema = Schema(
       type: Date,
       required: true,
     },
-
+    
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
-    },
-
-    description: {
-      type: String,
-      required: true,
     },
 
     category: {
@@ -46,6 +41,7 @@ const transactionSchema = Schema(
       required: true,
       enum: ["income", "expense"],
     },
+
   },
   {
     versionKey: false,
@@ -54,6 +50,7 @@ const transactionSchema = Schema(
 );
 
 const Transaction = model("transaction", transactionSchema);
+
 
 const transactionJoiSchema = Joi.object({
   description: Joi.string().required(),
@@ -65,3 +62,4 @@ const transactionJoiSchema = Joi.object({
 });
 
 module.exports = { Transaction, transactionJoiSchema };
+

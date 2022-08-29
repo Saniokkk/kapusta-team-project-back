@@ -1,5 +1,6 @@
 const { Transaction, User } = require("../models");
 
+
 class TransactionController {
   async addTransaction(req, res) {
     const { _id, totalBalance } = req.user;
@@ -21,6 +22,8 @@ class TransactionController {
         totalBalance: newBalance,
       },
     });
+
+
   }
   async getAllTransaction(req, res) {
     res.send("get transaction");
