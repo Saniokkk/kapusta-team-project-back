@@ -15,7 +15,7 @@
     {
       "url": "http://localhost:5000"
     },
-    { "url": "https://kapusta42back.herokuapp.com" }
+    { "url": "https://kapusta42back-end.herokuapp.com" }
   ],
   "tags": [
     {
