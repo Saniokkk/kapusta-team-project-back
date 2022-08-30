@@ -213,7 +213,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BalanceResponse"
+                  "$ref": "#/components/schemas/AddTransactionResponse"
                 }
               }
             }
@@ -230,6 +230,17 @@
         "summary": "Add trasaction",
         "parameters": [],
         "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Transaction object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTransactionRequest"
+              }
+            }
+          }
+        },
 
         "responses": {
           "201": {
@@ -237,7 +248,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BalanceResponse"
+                  "$ref": "#/components/schemas/AddTransactionResponse"
                 }
               }
             }
@@ -313,6 +324,52 @@
           }
         }
       },
+      "AddTransactionRequest": {
+        "type": "object",
+        "required": ["date", "description", "category", "sum", "type"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Transaction date",
+            "format": "date",
+            "example": "2022-08-30"
+          },
+          "description": {
+            "type": "string",
+            "description": "Transaction discription",
+            "example": "Meat"
+          },
+          "category": {
+            "type": "string",
+            "description": [
+              "transport",
+              "products",
+              "health",
+              "alcohol",
+              "entertainment",
+              "housing",
+              "technique",
+              "communal, communications",
+              "sports, hobbies",
+              "education",
+              "other",
+              "wages",
+              "income"
+            ],
+            "example": "products"
+          },
+          "sum": {
+            "type": "number",
+            "description": "summa",
+            "example": 400
+          },
+          "type": {
+            "type": "string",
+            "description": "expense or income",
+            "example": "expense"
+          }
+        }
+      },
       "RegistrationResponse": {
         "type": "object",
         "properties": {
@@ -379,6 +436,57 @@
           "code": 200,
           "data": {
             "totalBalance": 1100
+          }
+        }
+      },
+      "AddTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "message",
+            "example": "success"
+          },
+          "code": {
+            "type": "number",
+            "description": "code",
+            "example": "200"
+          },
+          "data": {
+            "type": "object",
+            "description": "response",
+            "example": {
+              "result": {
+                "date": "2022-08-29T00:00:00.000Z",
+                "owner": "630a4ce122d8de88190363c9",
+                "description": "tekila44",
+                "category": "alcohol",
+                "sum": 100,
+                "type": "expense",
+                "_id": "630dd63ff6a94d0201061201",
+                "createdAt": "2022-08-30T09:19:59.355Z",
+                "updatedAt": "2022-08-30T09:19:59.355Z"
+              },
+              "totalBalance": 400
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "code": 201,
+          "data": {
+            "result": {
+              "date": "2022-08-29T00:00:00.000Z",
+              "owner": "630a4ce122d8de88190363c9",
+              "description": "tekila44",
+              "category": "alcohol",
+              "sum": 100,
+              "type": "expense",
+              "_id": "630dd63ff6a94d0201061201",
+              "createdAt": "2022-08-30T09:19:59.355Z",
+              "updatedAt": "2022-08-30T09:19:59.355Z"
+            },
+            "totalBalance": 400
           }
         }
       }
