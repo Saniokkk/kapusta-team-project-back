@@ -25,4 +25,7 @@ router.delete(
   cntrWrapper(TransactionController.removeTransaction)
 );
 
+// by period(month/year)
+router.get("/total/:month/:year", auth, TransactionController.perPeriod);
+
 module.exports = router;

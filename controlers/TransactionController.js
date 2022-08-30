@@ -61,6 +61,58 @@ class TransactionController {
       },
     });
   }
+
+  async perPeriod(req, res) {
+    const { _id } = req.user;
+    const { month, year } = req.params;
+
+    const result = await User.findById(
+      _id,
+      "-createdAt -updatedAt -userPassword -token"
+    );
+
+    if (!result) {
+      throw createError(404, "User not found");
+    }
+
+    const transactions = await Transaction.find({ owner: _id });
+
+    const transactionsByMonthAndYear = transactions.filter(({ date }) => {
+      const operationYear = date.getFullYear().toString();
+      const operationMonth = 0 + (date.getMonth() + 1).toString();
+
+      return operationYear === year && operationMonth === month;
+    });
+
+    const incomeTransactions = transactionsByMonthAndYear.filter(
+      ({ type }) => type === "income"
+    );
+    const expenseTransactions = transactionsByMonthAndYear.filter(
+      ({ type }) => type === "expense"
+    );
+
+    // console.log(incomeTransactions);
+    // console.log(expenseTransactions);
+    const totalExpense = expenseTransactions.reduce(
+      (prevValue, { sum }) => prevValue + sum,
+      0
+    );
+    const totalIncome = incomeTransactions.reduce(
+      (prevValue, { sum }) => prevValue + sum,
+      0
+    );
+
+    res.status(200).json({
+      status: "success",
+      code: 200,
+      data: {
+        incomeTransactions,
+        expenseTransactions,
+        totalExpense,
+        totalIncome,
+      },
+    });
+  }
 }
 
 module.exports = new TransactionController();
