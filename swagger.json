@@ -312,6 +312,50 @@
           }
         }
       }
+    },
+    "/api/transactions/total/{month}/{year}": {
+      "get": {
+        "tags": ["Transaction"],
+        "summary": "Get period trasaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "month",
+            "required": true,
+            "type": "string",
+            "description": "month"
+          },
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "string",
+            "description": "year"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/periodTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
     }
   },
 
@@ -598,15 +642,64 @@
               "message": "Transaaction with ID630dd624f6a94d02010611fd deleted",
               "newBalance": -300
             }
+          },
+          "example": {
+            "status": "success",
+            "code": 200,
+            "data": {
+              "message": "Transaaction with ID630dd624f6a94d02010611fd deleted",
+              "newBalance": -300
+            }
           }
         }
       },
-      "example": {
-        "status": "success",
-        "code": 200,
-        "data": {
-          "message": "Transaaction with ID630dd624f6a94d02010611fd deleted",
-          "newBalance": -300
+      "periodTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "message",
+            "example": "success"
+          },
+          "code": {
+            "type": "number",
+            "description": "code",
+            "example": "200"
+          },
+          "data": {
+            "type": "object",
+            "description": "response",
+            "example": {
+              "incomeTransactions": [
+                {
+                  "_id": "630e4163fef5a6fb1aa8b74d",
+                  "date": "2022-06-27T00:00:00.000Z",
+                  "owner": "630a4ce122d8de88190363c9",
+                  "description": "1",
+                  "category": "income",
+                  "sum": 500,
+                  "type": "income",
+                  "createdAt": "2022-08-30T16:57:07.350Z",
+                  "updatedAt": "2022-08-30T16:57:07.350Z"
+                }
+              ],
+              "expenseTransactions": [
+                {
+                  "_id": "630e36a3c9827686e79c4594",
+                  "date": "2022-06-27T00:00:00.000Z",
+                  "owner": "630a4ce122d8de88190363c9",
+                  "description": "1111",
+                  "category": "alcohol",
+                  "sum": 100,
+                  "type": "expense",
+                  "createdAt": "2022-08-30T16:11:15.591Z",
+                  "updatedAt": "2022-08-30T16:11:15.591Z"
+                }
+              ],
+              "totalExpense": 300,
+              "totalIncome": 1000
+            }
+          }
         }
       }
     },
