@@ -1,14 +1,14 @@
 const express = require("express");
 const { GoogleAuthController } = require("../controlers");
-const { cntrWrapper } = require("../middlewares");
+const { ctrlWrapper } = require("../middlewares");
 
 const router = express.Router();
 
-router.get("/google", cntrWrapper(GoogleAuthController.googleAuth));
+router.get("/google", ctrlWrapper(GoogleAuthController.googleAuth));
 
 router.get(
   "/google-redirect",
-  cntrWrapper(GoogleAuthController.googleRedirect)
+  ctrlWrapper(GoogleAuthController.googleRedirect)
 );
 
 module.exports = router;

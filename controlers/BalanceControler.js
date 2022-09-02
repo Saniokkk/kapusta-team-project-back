@@ -2,14 +2,14 @@ const { User } = require("../models");
 
 const { createError } = require("../helpers/createError");
 
-class BalanceControler {
+class BalanceController {
   async getBalance(req, res) {
     console.log(req.user);
     const { _id } = req.user;
     const result = await User.findById(_id);
     console.log(result);
     if (!result) {
-      createError(404, "User not found");
+      throw createError();
     }
     res.status(200).json({
       status: "success",
@@ -19,6 +19,7 @@ class BalanceControler {
       },
     });
   }
+
   async updateBalance(req, res) {
     const { _id } = req.user;
     console.log(req.body);
@@ -37,4 +38,4 @@ class BalanceControler {
   }
 }
 
-module.exports = new BalanceControler();
+module.exports = new BalanceController();

@@ -3,21 +3,31 @@ const Joi = require("joi");
 
 const userSchema = Schema(
   {
-    userPassword: {
-      type: String,
-      required: [true, "Password is required"],
-    },
-    userEmail: {
+    email: {
       type: String,
       required: [true, "Email is required"],
       unique: true,
     },
-
-    token: {
+    password: {
       type: String,
-      default: null,
+      required: [true, "Password is required"],
     },
-
+    token: {
+        type: String,
+        default: null,
+    },
+    avatarURL: {
+        type: String,
+        required: true,
+    },
+    verify: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+        required: [true, 'Verify token is required'],
+    },
     totalBalance: {
       type: Number,
       default: 0,
@@ -30,17 +40,27 @@ const User = model("user", userSchema);
 
 const regVerMeil = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
 
-const joiRegisterSchema = Joi.object({
-  userPassword: Joi.string().min(6).required(),
-  userEmail: Joi.string().pattern(regVerMeil).required(),
+const register = Joi.object({
+  email: Joi.string().pattern(regVerMeil).required(),
+  password: Joi.string().min(6).required(),
 });
 
-const balanceSchema = Joi.object({
+const login = Joi.object({
+    email: Joi.string().pattern(regVerMeil).required(),
+    password: Joi.string().min(6).required()
+});
+
+const balance = Joi.object({
   totalBalance: Joi.number().required(),
 });
 
+const joiSchemas = {
+  register,
+  login,
+  balance,
+}
+
 module.exports = {
   User,
-  joiRegisterSchema,
-  balanceSchema,
+  joiSchemas
 };

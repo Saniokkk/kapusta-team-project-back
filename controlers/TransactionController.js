@@ -23,6 +23,7 @@ class TransactionController {
       },
     });
   }
+
   async getAllTransaction(req, res) {
     const { _id: owner } = req.user;
     const result = await Transaction.find({ owner }).populate(
@@ -37,6 +38,7 @@ class TransactionController {
       },
     });
   }
+
   async removeTransaction(req, res) {
     const { transactionId } = req.params;
     const { _id, totalBalance } = req.user;
@@ -44,7 +46,7 @@ class TransactionController {
     const { type, sum } = await Transaction.findByIdAndRemove(transactionId);
 
     if (!sum) {
-      throw createError(404, "Not Found");
+      throw createError();
     }
 
     const newBalance =
@@ -56,7 +58,7 @@ class TransactionController {
       status: "success",
       code: 200,
       data: {
-        message: `Transaaction with ID${transactionId} deleted`,
+        message: `Transaction with ID${transactionId} deleted`,
         newBalance,
       },
     });
@@ -68,7 +70,7 @@ class TransactionController {
 
     const result = await User.findById(
       _id,
-      "-createdAt -updatedAt -userPassword -token"
+      "-createdAt -updatedAt -password -token"
     );
 
     if (!result) {

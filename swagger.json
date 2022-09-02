@@ -23,8 +23,8 @@
       "description": "Authorization endpoints"
     },
     {
-      "name": "Cash",
-      "description": "Cash endpoints"
+      "name": "Balance",
+      "description": "Balance endpoints"
     },
     {
       "name": "Transaction",
@@ -141,7 +141,7 @@
     },
     "/api/balance/current": {
       "get": {
-        "tags": ["Cash"],
+        "tags": ["Balance"],
         "summary": "Get user balance",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -170,7 +170,7 @@
     },
     "/api/balance/update": {
       "patch": {
-        "tags": ["Cash"],
+        "tags": ["Balance"],
         "summary": "Update balance",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -363,14 +363,14 @@
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["userEmail", "userPassword"],
+        "required": ["email", "password"],
         "properties": {
-          "userEmail": {
+          "email": {
             "type": "string",
             "description": "User's email",
             "format": "email"
           },
-          "userPassword": {
+          "password": {
             "type": "string",
             "description": "User's password",
             "example": "qwerty123"
@@ -379,7 +379,7 @@
       },
       "UpdateBalanceRequest": {
         "type": "object",
-        "required": ["userEmail", "userPassword"],
+        "required": ["email", "password"],
         "properties": {
           "totalBalance": {
             "type": "number",
@@ -400,7 +400,7 @@
           },
           "description": {
             "type": "string",
-            "description": "Transaction discription",
+            "description": "Transaction description",
             "example": "Meat"
           },
           "category": {
@@ -445,11 +445,11 @@
         },
         "example": {
           "status": "success",
-          "code": 200,
+          "code": 201,
           "data": {
             "token": "89ebEe9Gm2DvAdDcb_M67xaSB-_s0YnfdN679QU",
             "user": {
-              "userEmail": "user@example.com"
+              "email": "user@example.com"
             }
           }
         }
@@ -639,7 +639,7 @@
             "type": "object",
             "description": "response",
             "example": {
-              "message": "Transaaction with ID630dd624f6a94d02010611fd deleted",
+              "message": "Transaction with ID630dd624f6a94d02010611fd deleted",
               "newBalance": -300
             }
           },
@@ -647,7 +647,7 @@
             "status": "success",
             "code": 200,
             "data": {
-              "message": "Transaaction with ID630dd624f6a94d02010611fd deleted",
+              "message": "Transaction with ID630dd624f6a94d02010611fd deleted",
               "newBalance": -300
             }
           }
