@@ -11,13 +11,7 @@ class BalanceController {
     if (!result) {
       throw createError();
     }
-    res.status(200).json({
-      status: "success",
-      code: 200,
-      data: {
-        totalBalance: result.totalBalance,
-      },
-    });
+    res.status(200).json({totalBalance: result.totalBalance});
   }
 
   async updateBalance(req, res) {
