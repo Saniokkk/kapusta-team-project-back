@@ -1,6 +1,8 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+require("dotenv").config()
+require("colors")
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
@@ -10,7 +12,7 @@ require("dotenv").config();
 
 const {
   authRouter,
-  googleRouter,
+  // googleRouter,
   balanceRouter,
   transactionsRouter,
 } = require("./routers");

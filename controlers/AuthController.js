@@ -1,67 +1,110 @@
-const { Conflict, Unauthorized } = require("http-errors");
-const { User } = require("../models");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatar = require('gravatar');
+const {v4: uuid } = require('uuid');
+const { User, joiSchemas } = require("../models/user");
+const sendEmail = require('../helpers/sendEmail');
+const createError = require("../helpers/createError");
 
 class AuthController {
   async register(req, res) {
-    console.log(req.body);
-    const { userEmail, userPassword } = req.body;
-    const user = await User.findOne({ userEmail });
+    const { email, password } = req.body;
+    const { NODE_ENV, BASE_URL_DEV, BASE_URL_PROD } = process.env;
+    console.log(NODE_ENV);
+
+    const baseUrl = NODE_ENV === "development" ? BASE_URL_DEV : BASE_URL_PROD;
+    
+    const { error } = joiSchemas.register.validate(req.body);
+
+    if (error) {
+        throw createError(400, error.message);
+    }    
+    const user = await User.findOne({ email });
     if (user) {
-      throw new Conflict(` Email ${userEmail} in use`);
+      throw createError(409, ` Email ${email} in use`);
     }
-    const hashPassword = bcrypt.hashSync(userPassword, bcrypt.genSaltSync(10));
+    const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    const avatarURL = gravatar.url(email);
+    const verificationToken = uuid();
+
     const result = await User.create({
-      userEmail,
-      userPassword: hashPassword,
+      email,
+      password: hashPassword,
+      avatarURL,
+      verificationToken
     });
+
+    console.log(baseUrl);
+    const mail = {
+      to: email,
+      subject: "Підтвердження реєстрації на сайті",
+      html: `<a target="_blank" href="${baseUrl}/api/users/verify/${verificationToken}">Натисніть для підтвердження реїстрації</a>`
+    }
+    
+    await sendEmail(mail);
+    console.log(email);
+    
     res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
-        user: {
-          userEmail,
-        },
+      user: {
+        email: result.email,
       },
     });
   }
 
+  async verifyEmail(req, res){
+    const verificationToken = req.params;
+    console.log(verificationToken);
+    const user = await User.findOne( verificationToken );
+    console.log(user);
+    if (!user) {
+      throw createError(404);
+    }
+    const result = await User.findByIdAndUpdate(user._id, { verificationToken: "", verify: true });
+    console.log(result);
+    res.json({
+        message: "Verification successful"
+    })
+}
+
   async login(req, res) {
     const { SECRET_KEY } = process.env;
-    const { userEmail, userPassword } = req.body;
-    const user = await User.findOne({ userEmail });
+    const { email, password } = req.body;
+    const { error } = joiSchemas.login.validate(req.body);
+
+    if (error) {
+        throw createError(400, error.message);
+    }    
+
+    const user = await User.findOne({ email });
     if (!user) {
-      throw new Unauthorized("Email or password is wrong");
+      throw createError(401, "Email or password is wrong");
     }
-    const passCompare = bcrypt.compareSync(userPassword, user.userPassword);
-    if (!passCompare) {
-      throw new Unauthorized("Email or password is wrong");
+    const comparePassword = bcrypt.compareSync(password, user.password);
+    if (!comparePassword) {
+      throw createError(401, "Email or password is wrong");
     }
     const payload = {
       id: user._id,
     };
-    const token = jwt.sign(payload, SECRET_KEY);
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
     await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({
-      status: "success",
-      code: 200,
-      data: {
         token,
         user: {
-          userEmail,
-        },
+          email,
       },
     });
   }
 
   async logout(req, res) {
     const { _id } = req.user;
-    await User.findByIdAndUpdate(_id, { token: null });
-    res.status(200).json({
-      status: `Logout success with id${_id}`,
-      code: 200,
-    });
+    const user = await User.findByIdAndUpdate(_id, { token: null });
+
+    if (!user) {
+        throw createError(401)
+    }
+
+    res.status(200).send(`Logout success with id: ${_id}`);
   }
 }
 
