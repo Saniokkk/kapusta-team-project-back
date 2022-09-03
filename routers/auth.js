@@ -1,5 +1,9 @@
 const express = require("express");
-const { AuthController } = require("../controlers");
+const {
+    AuthController,
+    googleAuth,
+    googleRedirect,
+} = require("../controlers");
 const { auth, validation, ctrlWrapper } = require("../middlewares");
 
 const { joiSchemas } = require("../models/user");
@@ -15,5 +19,9 @@ router.get('/verify/:verificationToken', ctrlWrapper(AuthController.verifyEmail)
 router.post("/login", validation(joiSchemas.login), ctrlWrapper(AuthController.login));
 
 router.post("/logout", auth, ctrlWrapper(AuthController.logout));
+
+router.get("/google", ctrlWrapper(googleAuth));
+
+router.get("/google-redirect", ctrlWrapper(googleRedirect));
 
 module.exports = router;

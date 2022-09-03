@@ -1,11 +1,13 @@
 const AuthController = require("./AuthController");
-const GoogleAuthController = require("./GoogleAuthController");
 const BalanceControler = require("./BalanceControler");
 const TransactionController = require("./TransactionController");
+const { googleAuth } = require("./GoogleAuthController");
+const { googleRedirect } = require("./GoogleAuthController");
 
 module.exports = {
   AuthController,
-  GoogleAuthController,
   BalanceControler,
   TransactionController,
+  googleAuth,
+  googleRedirect,
 };
