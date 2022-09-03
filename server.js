@@ -10,7 +10,6 @@ mongoose
     app.listen(PORT, () => {
       console.log(
         `Server running. Use our API on port: ${PORT}, Database connection successful`
-          .cyan.italic.underline
       );
     })
   )
