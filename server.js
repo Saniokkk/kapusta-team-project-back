@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-require("colors");
 
 const app = require("./app");
 
