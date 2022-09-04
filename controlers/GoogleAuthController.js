@@ -3,10 +3,14 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const User = require("../models");
 
+const { NODE_ENV, BASE_URL_PROD_BACK, BASE_URL_PROD_FRONT, BASE_URL_DEV_FRONT, BASE_URL_DEV_BACK } = process.env;
+const baseUrlFront = NODE_ENV === "development" ? BASE_URL_DEV_FRONT : BASE_URL_PROD_FRONT;
+const baseUrlBack = NODE_ENV === "development" ? BASE_URL_DEV_BACK : BASE_URL_PROD_BACK;
+
 const googleAuth = (req, res) => {
   const stringifyParams = queryString.stringify({
     client_id: process.env.GOOGLE_CLIENT_ID,
-    redirect_uri: `${process.env.BASE_URL}/api/auth/google-redirect`,
+    redirect_uri: `${baseUrlBack}/api/auth/google-redirect`,
     scope: [
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile',
@@ -64,7 +68,7 @@ const googleRedirect = async (req, res) => {
     await addToken(user._id);
   }
 
-  return res.redirect(`${process.env.FRONTEND_URL}?token=${token}`);
+  return res.redirect(`${baseUrlFront}?token=${token}`);
 };
 
 module.exports = {
