@@ -31,6 +31,10 @@
       "description": "Transaction endpoints"
     }
   ],
+
+
+
+  
   "paths": {
     "/api/users/register": {
       "post": {
@@ -94,7 +98,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
@@ -114,6 +118,35 @@
       "get": {
         "tags": ["Auth"],
         "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          },
+          "500": {
+            "description": "Invalid signature",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get information about the current user",
         "parameters": [],
         "security": [{ "Bearer": [] }],
 
@@ -368,7 +401,8 @@
           "email": {
             "type": "string",
             "description": "User's email",
-            "format": "email"
+            "format": "email",
+            "example": "example@gmail.com"
           },
           "password": {
             "type": "string",
@@ -444,14 +478,20 @@
           }
         },
         "example": {
-          "status": "success",
-          "code": 201,
-          "data": {
-            "token": "89ebEe9Gm2DvAdDcb_M67xaSB-_s0YnfdN679QU",
-            "user": {
-              "email": "user@example.com"
-            }
+          "email": "example@gmail.com"
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "message",
+            "example": "logout ok"
           }
+        },
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
         }
       },
       "LogoutResponse": {
@@ -469,9 +509,10 @@
           }
         },
         "example": {
-          "status": "Logout success with id630a7441b8ed1ff8a8a403ee",
-          "code": 200
-        }
+        "email": "example@gmail.com",
+        "avatarURL": "www.gravatar.com/avatar/afd5b46d171ec84e3796561ca6d4f4a9",
+        "totalBalance": 5500
+    }
       },
 
       "BalanceResponse": {
@@ -491,17 +532,13 @@
             "type": "object",
             "description": "response",
             "example": {
-              "totalBalance": 1100
+              "totalBalance": 5000
             }
           }
         },
         "example": {
-          "status": "success",
-          "code": 200,
-          "data": {
-            "totalBalance": 1100
+            "totalBalance": 5000
           }
-        }
       },
       "AddTransactionResponse": {
         "type": "object",

@@ -6,12 +6,12 @@ class BalanceController {
   async getBalance(req, res) {
     console.log(req.user);
     const { _id } = req.user;
-    const result = await User.findById(_id);
-    console.log(result);
-    if (!result) {
+    const user = await User.findById(_id);
+    console.log(user);
+    if (!user) {
       throw createError();
     }
-    res.status(200).json({totalBalance: result.totalBalance});
+    res.status(200).json({totalBalance: user.totalBalance});
   }
 
   async updateBalance(req, res) {

@@ -14,6 +14,7 @@ const {
   // googleRouter,
   balanceRouter,
   transactionsRouter,
+  reportRouter,
 } = require("./routers");
 
 const app = express();
@@ -30,6 +31,7 @@ app.use("/api/users", authRouter);
 // app.use("/api/googleauth", googleRouter)v;
 app.use("/api/balance", balanceRouter);
 app.use("/api/transactions", transactionsRouter);
+app.use("/api/report", reportRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

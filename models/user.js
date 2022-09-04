@@ -54,7 +54,7 @@ const balance = Joi.object({
   totalBalance: Joi.number().required(),
 });
 
-const joiSchemas = {
+const joiUserSchemas = {
   register,
   login,
   balance,
@@ -62,5 +62,5 @@ const joiSchemas = {
 
 module.exports = {
   User,
-  joiSchemas
+  joiUserSchemas
 };

@@ -4,6 +4,8 @@ const GoogleAuthController = require("./GoogleAuthController");
 const BalanceController = require("./BalanceController");
 
 const TransactionController = require("./TransactionController");
+const ReportController = require("./ReportController");
+
 const { googleAuth } = require("./GoogleAuthController");
 const { googleRedirect } = require("./GoogleAuthController");
 
@@ -12,6 +14,7 @@ module.exports = {
   GoogleAuthController,
   BalanceController,
   TransactionController,
+  ReportController,
   googleAuth,
   googleRedirect,
 };

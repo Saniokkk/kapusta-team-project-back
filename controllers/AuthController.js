@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const gravatar = require('gravatar');
 const {v4: uuid } = require('uuid');
-const { User, joiSchemas } = require("../models/user");
+const { User, joiUserSchemas } = require("../models/user");
 const sendEmail = require('../helpers/sendEmail');
 const createError = require("../helpers/createError");
 
@@ -11,11 +11,12 @@ class AuthController {
     const { email, password } = req.body;
     const { NODE_ENV, BASE_URL_DEV, BASE_URL_PROD } = process.env;
     console.log(NODE_ENV);
+    console.log("www");
 
     const baseUrl = NODE_ENV === "development" ? BASE_URL_DEV : BASE_URL_PROD;
     
-    const { error } = joiSchemas.register.validate(req.body);
-
+    const { error } = joiUserSchemas.register.validate(req.body);
+    console.log(error)
     if (error) {
         throw createError(400, error.message);
     }    
@@ -69,8 +70,8 @@ class AuthController {
   async login(req, res) {
     const { SECRET_KEY } = process.env;
     const { email, password } = req.body;
-    const { error } = joiSchemas.login.validate(req.body);
-
+    const { error } = joiUserSchemas.login.validate(req.body);
+    console.log("www")
     if (error) {
         throw createError(400, error.message);
     }    
@@ -101,7 +102,7 @@ class AuthController {
     const user = await User.findByIdAndUpdate(_id, { token: null });
 
     if (!user) {
-        throw createError(401)
+      throw createError(401);
     }
 
     res.status(200).send(`Logout success with id: ${_id}`);
