@@ -1,5 +1,5 @@
 const express = require("express");
-const { AuthController } = require("../controlers");
+const { AuthController } = require("../controllers");
 const { auth, validation, ctrlWrapper } = require("../middlewares");
 
 const { joiSchemas } = require("../models/user");
@@ -15,5 +15,7 @@ router.get('/verify/:verificationToken', ctrlWrapper(AuthController.verifyEmail)
 router.post("/login", validation(joiSchemas.login), ctrlWrapper(AuthController.login));
 
 router.post("/logout", auth, ctrlWrapper(AuthController.logout));
+
+router.post("/current", auth, ctrlWrapper(AuthController.current));
 
 module.exports = router;

@@ -19,16 +19,12 @@ class BalanceController {
     console.log(req.body);
     const result = await User.findByIdAndUpdate(_id, req.body);
     if (!result) {
-      createError(404, "User not found");
+      throw createError(404, "User not found");
     }
     const newBalance = await User.findById(_id);
     res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
         message: `Balance updated, new balance is: ${newBalance.totalBalance}`,
-      },
-    });
+      });
   }
 }
 

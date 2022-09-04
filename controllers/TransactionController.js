@@ -7,36 +7,30 @@ class TransactionController {
     const { type, sum } = req.body;
     console.log(req.body);
 
-    const result = await Transaction.create({ ...req.body, owner: _id });
+    const transaction = await Transaction.create({ ...req.body, owner: _id });
 
     const newBalance =
       type === "income" ? totalBalance + sum : totalBalance - sum;
+    
+    if (newBalance < 0) {
+      throw createError(400, "Not enough money, impossible to make a transaction");
+    }
 
     await User.findByIdAndUpdate(_id, { totalBalance: newBalance });
 
     res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
-        result,
+        transaction,
         totalBalance: newBalance,
-      },
-    });
+      }); 
   }
 
-  async getAllTransaction(req, res) {
+  async getAllTransactions(req, res) {
     const { _id: owner } = req.user;
     const result = await Transaction.find({ owner }).populate(
       "owner",
       "_id, email"
     );
-    res.status(200).json({
-      status: "success",
-      code: 200,
-      data: {
-        result,
-      },
-    });
+    res.status(200).json(result);
   }
 
   async removeTransaction(req, res) {
@@ -51,23 +45,24 @@ class TransactionController {
 
     const newBalance =
       type === "income" ? totalBalance - sum : totalBalance + sum;
+    
+    if (newBalance < 0) {
+      throw createError(400, "Not enough money, impossible to make a transaction");
+    }
 
     await User.findByIdAndUpdate({ _id }, { totalBalance: newBalance });
 
     res.status(200).json({
-      status: "success",
-      code: 200,
-      data: {
-        message: `Transaction with ID${transactionId} deleted`,
+        message: `Transaction with ID: ${transactionId} deleted`,
         newBalance,
-      },
-    });
+      });
   }
 
   async perPeriod(req, res) {
     const { _id } = req.user;
     const { month, year } = req.params;
-
+    console.log(month)
+    console.log(year)
     const result = await User.findById(
       _id,
       "-createdAt -updatedAt -password -token"
@@ -81,10 +76,12 @@ class TransactionController {
 
     const transactionsByMonthAndYear = transactions.filter(({ date }) => {
       const operationYear = date.getFullYear().toString();
-      const operationMonth = 0 + (date.getMonth() + 1).toString();
+      const operationMonth = (date.getMonth() + 1).toString();
 
       return operationYear === year && operationMonth === month;
     });
+
+    console.log(transactionsByMonthAndYear);
 
     const incomeTransactions = transactionsByMonthAndYear.filter(
       ({ type }) => type === "income"
@@ -93,8 +90,6 @@ class TransactionController {
       ({ type }) => type === "expense"
     );
 
-    // console.log(incomeTransactions);
-    // console.log(expenseTransactions);
     const totalExpense = expenseTransactions.reduce(
       (prevValue, { sum }) => prevValue + sum,
       0
@@ -105,15 +100,11 @@ class TransactionController {
     );
 
     res.status(200).json({
-      status: "success",
-      code: 200,
-      data: {
         incomeTransactions,
         expenseTransactions,
         totalExpense,
         totalIncome,
-      },
-    });
+      });
   }
 }
 

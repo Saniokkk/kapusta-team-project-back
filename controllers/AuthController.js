@@ -106,6 +106,16 @@ class AuthController {
 
     res.status(200).send(`Logout success with id: ${_id}`);
   }
+
+  current(req, res) {
+    const { email, avatarURL, totalBalance } = req.user;
+    console.log(req.user);
+    res.json({
+        email,
+        avatarURL,
+        totalBalance
+    })
+  }
 }
 
 module.exports = new AuthController();
