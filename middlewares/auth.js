@@ -23,6 +23,8 @@ const auth = async (req, res, next) => {
     if (error.message === "Invalid sugnature") {
       error.status = 401;
     }
+    console.log('beforeNext');
+    console.log(error);
     next(error);
   }
 };

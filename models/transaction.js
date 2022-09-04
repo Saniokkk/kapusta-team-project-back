@@ -7,7 +7,6 @@ const transactionSchema = Schema(
       type: Date,
       required: true,
     },
-
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -16,7 +15,6 @@ const transactionSchema = Schema(
       type: String,
       required: true,
     },
-
     category: {
       type: String,
       required: true,
