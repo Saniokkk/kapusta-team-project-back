@@ -1,5 +1,11 @@
 const express = require("express");
-const { AuthController } = require("../controllers");
+
+const {
+    AuthController,
+    googleAuth,
+    googleRedirect,
+} = require("../controllers");
+
 const { auth, validation, ctrlWrapper } = require("../middlewares");
 
 const { joiSchemas } = require("../models/user");
@@ -16,6 +22,12 @@ router.post("/login", validation(joiSchemas.login), ctrlWrapper(AuthController.l
 
 router.post("/logout", auth, ctrlWrapper(AuthController.logout));
 
+
 router.post("/current", auth, ctrlWrapper(AuthController.current));
+
+router.get("/google", ctrlWrapper(googleAuth));
+
+router.get("/google-redirect", ctrlWrapper(googleRedirect));
+
 
 module.exports = router;
