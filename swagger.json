@@ -44,7 +44,7 @@
 
 
   "paths": {
-    "/api/users/register": {
+    "/api/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
@@ -83,7 +83,7 @@
         }
       }
     },
-    "/api/users/verify/:verificationToken": {
+    "/api/auth/verify/:verificationToken": {
       "post": {
         "tags": ["Auth"],
         "summary": "User verification",
@@ -115,7 +115,7 @@
         }
       }
     },
-    "/api/users/login": {
+    "/api/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -154,7 +154,7 @@
         }
       }
     },
-    "/api/users/logout": {
+    "/api/auth/logout": {
       "get": {
         "tags": ["Auth"],
         "summary": "User logout",
@@ -176,7 +176,7 @@
         }
       }
     },
-    "/api/users/current": {
+    "/api/user/current": {
       "get": {
         "tags": ["User"],
         "summary": "Get information about the current user",
@@ -251,7 +251,6 @@
             }
           }
         },
-
         "responses": {
           "201": {
             "description": "Successful operation",
@@ -274,35 +273,7 @@
         }
       }
     },
-    "/api/transactions": {
-      "get": {
-        "tags": ["Transaction"],
-        "summary": "Get all trasaction",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
 
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAllTransactionResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {}
-          }
-        }
-      }
-    },
     "/api/transactions/income": {
       "post": {
         "tags": ["Transaction"],
@@ -428,11 +399,6 @@
       }
     }
   },
-
-
-
-
-
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -767,37 +733,6 @@
             "description": "Date transaction",
             "example": "2022-08-29T07:00:52.786Z"
           } 
-        }
-      },
-      "deleteTransactionResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "message",
-            "example": "success"
-          },
-          "code": {
-            "type": "number",
-            "description": "code",
-            "example": "200"
-          },
-          "data": {
-            "type": "object",
-            "description": "response",
-            "example": {
-              "message": "Transaction with ID630dd624f6a94d02010611fd deleted",
-              "newBalance": -300
-            }
-          },
-          "example": {
-            "status": "success",
-            "code": 200,
-            "data": {
-              "message": "Transaction with ID630dd624f6a94d02010611fd deleted",
-              "newBalance": -300
-            }
-          }
         }
       },
       "DeleteTransactionResponse": {

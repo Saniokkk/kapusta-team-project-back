@@ -15,6 +15,7 @@ const {
   balanceRouter,
   transactionsRouter,
   reportRouter,
+  userRouter
 } = require("./routers");
 
 const app = express();
@@ -27,7 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/api/users", authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 // app.use("/api/googleauth", googleRouter)v;
 app.use("/api/balance", balanceRouter);
 app.use("/api/transactions", transactionsRouter);

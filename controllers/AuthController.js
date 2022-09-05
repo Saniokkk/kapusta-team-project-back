@@ -10,13 +10,10 @@ class AuthController {
   async register(req, res) {
     const { email, password } = req.body;
     const { NODE_ENV, BASE_URL_DEV, BASE_URL_PROD } = process.env;
-    console.log(NODE_ENV);
-    console.log("www");
 
     const baseUrl = NODE_ENV === "development" ? BASE_URL_DEV : BASE_URL_PROD;
     
     const { error } = joiUserSchemas.register.validate(req.body);
-    console.log(error)
     if (error) {
         throw createError(400, error.message);
     }    
@@ -35,7 +32,6 @@ class AuthController {
       verificationToken
     });
 
-    console.log(baseUrl);
     const mail = {
       to: email,
       subject: "Підтвердження реєстрації на сайті",
@@ -43,8 +39,7 @@ class AuthController {
     }
     
     await sendEmail(mail);
-    console.log(email);
-    
+        
     res.status(201).json({
       user: {
         email: result.email,
@@ -107,16 +102,6 @@ class AuthController {
     }
 
     res.status(204).send(`Logout success with id: ${_id}`);
-  }
-
-  current(req, res) {
-    const { email, avatarURL, totalBalance } = req.user;
-    console.log(req.user);
-    res.json({
-        email,
-        avatarURL,
-        totalBalance
-    })
   }
 }
 
