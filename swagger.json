@@ -367,7 +367,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExpansesTransactionResponse"
+                  "$ref": "#/components/schemas/ExpanseTransactionResponse"
                 }
               }
             }
@@ -393,7 +393,7 @@
             "name": "type",
             "required": true,
             "type": "string",
-            "description": "On of income or expense"
+            "description": "On of 'income' or 'expense'"
           },
           {
             "in": "path",
@@ -411,7 +411,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/periodTransactionResponse"
+                  "$ref": "#/components/schemas/DeleteTransactionResponse"
                 }
               }
             }
@@ -495,7 +495,7 @@
           }
         }
       },
-      "AddTransactionRequest": {
+      "AddExpenseTransactionRequest": {
         "type": "object",
         "required": ["date", "description", "category", "sum", "type"],
         "properties": {
@@ -677,7 +677,7 @@
           },
           "category": {
             "type": "string",
-            "description": "one of salary or extraSalary",
+            "description": "one of 'salary' or 'extraSalary'",
             "example": "extraSalary"
           },
           "sum": {
@@ -709,7 +709,7 @@
             "description": {
               "type": "string",
               "description": "any description",
-              "example": "premium"
+              "example": "banana"
             },
             "category": {
               "type": "string",
@@ -719,7 +719,7 @@
             "sum": {
               "type": "number",
               "description": "sum transaction",
-              "example": "6500"
+              "example": "100"
             }
         }
       },
@@ -745,17 +745,17 @@
           "description": {
             "type": "string",
             "description": "Any description",
-            "example": "premium"
+            "example": "banana"
           },
           "category": {
             "type": "string",
-            "description": "one of salary or extraSalary",
-            "example": "extraSalary"
+            "description": "one of 'transport', 'products', 'entertainment', 'housing', 'technique', 'communal,communications', 'education', 'other', 'wages', 'income'",
+            "example": "products"
           },
           "sum": {
             "type": "number",
             "description":"sum description",
-            "example": 350
+            "example": 100
           },
           "createdAt": {
             "type": "string",
@@ -769,7 +769,7 @@
           } 
         }
       },
-      "DeleteTransactionResponse": {
+      "deleteTransactionResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -800,52 +800,19 @@
           }
         }
       },
-      "periodTransactionResponse": {
+      "DeleteTransactionResponse": {
         "type": "object",
+        "required": ["message", "newBalance"],
         "properties": {
-          "status": {
+          "message": {
             "type": "string",
             "description": "message",
-            "example": "success"
+            "example": "Transaction with ID: 6314ea32e43673717f8f6b1e deleted"
           },
-          "code": {
+          "newBalance": {
             "type": "number",
             "description": "code",
-            "example": "200"
-          },
-          "data": {
-            "type": "object",
-            "description": "response",
-            "example": {
-              "incomeTransactions": [
-                {
-                  "_id": "630e4163fef5a6fb1aa8b74d",
-                  "date": "2022-06-27T00:00:00.000Z",
-                  "owner": "630a4ce122d8de88190363c9",
-                  "description": "1",
-                  "category": "income",
-                  "sum": 500,
-                  "type": "income",
-                  "createdAt": "2022-08-30T16:57:07.350Z",
-                  "updatedAt": "2022-08-30T16:57:07.350Z"
-                }
-              ],
-              "expenseTransactions": [
-                {
-                  "_id": "630e36a3c9827686e79c4594",
-                  "date": "2022-06-27T00:00:00.000Z",
-                  "owner": "630a4ce122d8de88190363c9",
-                  "description": "1111",
-                  "category": "alcohol",
-                  "sum": 100,
-                  "type": "expense",
-                  "createdAt": "2022-08-30T16:11:15.591Z",
-                  "updatedAt": "2022-08-30T16:11:15.591Z"
-                }
-              ],
-              "totalExpense": 300,
-              "totalIncome": 1000
-            }
+            "example": "40000"
           }
         }
       }
