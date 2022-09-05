@@ -1,11 +1,13 @@
 const authRouter = require("./auth");
-// const googleRouter = require("./googleAuth");
+const reportRouter = require("./reportRouter");
 const balanceRouter = require("./balanceRouter");
 const transactionsRouter = require("./transactionsRouter");
+const userRouter = require("./userRouter");
 
 module.exports = {
   authRouter,
-  // googleRouter,
+  reportRouter,
   balanceRouter,
   transactionsRouter,
+  userRouter,
 };

@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Joi = require("joi");
 
 const incomeSchema = Schema(
   {
@@ -26,11 +27,6 @@ const incomeSchema = Schema(
       type: Number,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-      enum: ["income", "expense"],
-    },
   },
   {
     versionKey: false,
@@ -38,6 +34,14 @@ const incomeSchema = Schema(
   }
 );
 
+const incomeJoiSchema = Joi.object({
+  description: Joi.string().required(),
+  category: Joi.string().required(),
+  sum: Joi.number().required(),
+  date: Joi.date().required(),
+  owner: Joi.string(),
+});
+
 const Income = model("income", incomeSchema);
 
-module.exports = {incomeSchema, Income};
+module.exports = {incomeJoiSchema, Income};

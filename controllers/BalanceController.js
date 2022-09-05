@@ -4,19 +4,16 @@ const { createError } = require("../helpers/createError");
 
 class BalanceController {
   async getBalance(req, res) {
-    console.log(req.user);
     const { _id } = req.user;
-    const result = await User.findById(_id);
-    console.log(result);
-    if (!result) {
+    const user = await User.findById(_id);
+    if (!user) {
       throw createError();
     }
-    res.status(200).json({totalBalance: result.totalBalance});
+    res.status(200).json({totalBalance: user.totalBalance});
   }
 
   async updateBalance(req, res) {
     const { _id } = req.user;
-    console.log(req.body);
     const result = await User.findByIdAndUpdate(_id, req.body);
     if (!result) {
       throw createError(404, "User not found");
