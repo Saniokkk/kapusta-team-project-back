@@ -48,6 +48,7 @@ class AuthController {
     res.status(201).json({
       user: {
         email: result.email,
+        message: "Go to your email and confirm registration"
       },
     });
   }
@@ -58,7 +59,7 @@ class AuthController {
     const user = await User.findOne( verificationToken );
     console.log(user);
     if (!user) {
-      throw createError(404);
+      throw createError(400, "Bad request (invalid verification token)");
     }
     const result = await User.findByIdAndUpdate(user._id, { verificationToken: "", verify: true });
     console.log(result);
@@ -71,7 +72,7 @@ class AuthController {
     const { SECRET_KEY } = process.env;
     const { email, password } = req.body;
     const { error } = joiUserSchemas.login.validate(req.body);
-    console.log("www")
+
     if (error) {
         throw createError(400, error.message);
     }    
@@ -105,7 +106,7 @@ class AuthController {
       throw createError(401);
     }
 
-    res.status(200).send(`Logout success with id: ${_id}`);
+    res.status(204).send(`Logout success with id: ${_id}`);
   }
 
   current(req, res) {

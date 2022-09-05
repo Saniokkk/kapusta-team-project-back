@@ -23,18 +23,26 @@
       "description": "Authorization endpoints"
     },
     {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
       "name": "Balance",
       "description": "Balance endpoints"
     },
     {
       "name": "Transaction",
       "description": "Transaction endpoints"
+    },
+    {
+      "name": "Report",
+      "description": "Report endpoints"
     }
   ],
 
 
 
-  
+
   "paths": {
     "/api/users/register": {
       "post": {
@@ -55,7 +63,7 @@
         },
         "responses": {
           "201": {
-            "description": "Successful operation",
+            "description": "Successful operation ",
             "content": {
               "application/json": {
                 "schema": {
@@ -70,6 +78,38 @@
           },
           "409": {
             "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/users/verify/:verificationToken": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User verification",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "verificationToken",
+            "required": true,
+            "type": "string",
+            "description": "User's verification token"
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Verification successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid verification token)",
             "content": {}
           }
         }
@@ -120,17 +160,10 @@
         "summary": "User logout",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-        
         "responses": {
-          "200": {
+          "204": {
             "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogoutResponse"
-                }
-              }
-            }
+            "content": {}
           },
           "401": {
             "description": "Not authorized",
@@ -145,7 +178,7 @@
     },
     "/api/users/current": {
       "get": {
-        "tags": ["Auth"],
+        "tags": ["User"],
         "summary": "Get information about the current user",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -156,7 +189,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogoutResponse"
+                  "$ref": "#/components/schemas/CurrentResponse"
                 }
               }
             }
@@ -268,61 +301,25 @@
             "content": {}
           }
         }
-      },
-
+      }
+    },
+    "/api/transactions/income": {
       "post": {
         "tags": ["Transaction"],
-        "summary": "Add trasaction",
+        "summary": "Add income transaction",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Transaction object",
+          "description": "Object income",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddTransactionRequest"
+                "$ref": "#/components/schemas/IncomeTransactionRequest"
               }
             }
           }
         },
-
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddTransactionResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/api/transactions/{transactionId}": {
-      "delete": {
-        "tags": ["Transaction"],
-        "summary": "Delete trasaction",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "transactionId",
-            "required": true,
-            "type": "string",
-            "description": "transaction id"
-          }
-        ],
-        "security": [{ "Bearer": [] }],
 
         "responses": {
           "200": {
@@ -330,7 +327,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteTransactionResponse"
+                  "$ref": "#/components/schemas/IncomeTransactionResponse"
                 }
               }
             }
@@ -346,24 +343,64 @@
         }
       }
     },
-    "/api/transactions/total/{month}/{year}": {
-      "get": {
+    "/api/transactions/expanse": {
+      "post": {
         "tags": ["Transaction"],
-        "summary": "Get period trasaction",
+        "summary": "Add expanse transaction",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Object expanse",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpanseTransactionRequest"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpansesTransactionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/transactions/:type/:transactionId": {
+      "delete": {
+        "tags": ["Transaction"],
+        "summary": "Remove transaction",
         "parameters": [
           {
             "in": "path",
-            "name": "month",
+            "name": "type",
             "required": true,
             "type": "string",
-            "description": "month"
+            "description": "On of income or expense"
           },
           {
             "in": "path",
-            "name": "year",
+            "name": "transactionId",
             "required": true,
             "type": "string",
-            "description": "year"
+            "description": "Transaction ID"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -392,6 +429,10 @@
     }
   },
 
+
+
+
+
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -408,6 +449,38 @@
             "type": "string",
             "description": "User's password",
             "example": "qwerty123"
+          }
+        }
+      },
+      "VerifyResponse":{
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "message": {
+            "type": "string",
+            "format": "string",
+            "example": "Verification successful"
+          }
+        }
+      },
+      "CurrentResponse":{
+        "type": "object",
+        "required": ["email", "avatarURL", "totalBalance"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "example@gmail.com"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's link avatar",
+            "example": "//www.gravatar.com/avatar/cf5831de3973012ae4f2ee60242fb617"
+          },
+          "totalBalance": {
+            "type": "number",
+            "description": "User's balance",
+            "example": 50000
           }
         }
       },
@@ -470,28 +543,40 @@
       },
       "RegistrationResponse": {
         "type": "object",
+        "required": ["message", "email"],
         "properties": {
           "message": {
             "type": "string",
-            "description": "message",
-            "example": "logout ok"
+            "format": "string",
+            "example": "Go to your email and confirm registration"
+          },
+          "email": {
+            "type": "string",
+            "description":"User's email",
+            "format": "email"
           }
-        },
-        "example": {
-          "email": "example@gmail.com"
         }
       },
       "LoginResponse": {
         "type": "object",
+        "required": ["token", "user"],
         "properties": {
-          "message": {
+          "token": {
             "type": "string",
-            "description": "message",
-            "example": "logout ok"
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
+          },
+          "user":{
+            "type": "object",
+            "required": ["email"],
+            "properties":{
+              "email": {
+                "type": "string",
+                "example":"example@gmail.com",
+                "format": "email"
+              }
+            }
+          
           }
-        },
-        "example": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
         }
       },
       "LogoutResponse": {
@@ -540,123 +625,148 @@
             "totalBalance": 5000
           }
       },
-      "AddTransactionResponse": {
+      "IncomeTransactionRequest": {
         "type": "object",
+        "required": ["date", "description", "category", "sum"],
         "properties": {
-          "status": {
-            "type": "string",
-            "description": "message",
-            "example": "success"
-          },
-          "code": {
-            "type": "number",
-            "description": "code",
-            "example": "200"
-          },
-          "data": {
-            "type": "object",
-            "description": "response",
-            "example": {
-              "result": {
-                "date": "2022-08-29T00:00:00.000Z",
-                "owner": "630a4ce122d8de88190363c9",
-                "description": "tekila44",
-                "category": "alcohol",
-                "sum": 100,
-                "type": "expense",
-                "_id": "630dd63ff6a94d0201061201",
-                "createdAt": "2022-08-30T09:19:59.355Z",
-                "updatedAt": "2022-08-30T09:19:59.355Z"
-              },
-              "totalBalance": 400
-            }
-          }
-        },
-        "example": {
-          "status": "success",
-          "code": 201,
-          "data": {
-            "result": {
-              "date": "2022-08-29T00:00:00.000Z",
-              "owner": "630a4ce122d8de88190363c9",
-              "description": "tekila44",
-              "category": "alcohol",
-              "sum": 100,
-              "type": "expense",
-              "_id": "630dd63ff6a94d0201061201",
-              "createdAt": "2022-08-30T09:19:59.355Z",
-              "updatedAt": "2022-08-30T09:19:59.355Z"
+            "date": {
+              "type": "string",
+              "description": "date",
+              "example": "2022-08-29T00:00:00.000Z"
             },
-            "totalBalance": 400
-          }
+            "description": {
+              "type": "string",
+              "description": "any description",
+              "example": "premium"
+            },
+            "category": {
+              "type": "string",
+              "description": "one of salary or extraSalary",
+              "example": "extraSalary"
+            },
+            "sum": {
+              "type": "number",
+              "description": "sum transaction",
+              "example": "6500"
+            }
         }
       },
-      "GetAllTransactionResponse": {
+      "IncomeTransactionResponse": {
         "type": "object",
+        "required": ["id", "date", "owner", "sum", "description", "category"],
         "properties": {
-          "status": {
+          "id": {
             "type": "string",
-            "description": "message",
-            "example": "success"
+            "description": "Transaction id",
+            "example": "630c6424c4126b2f6d97fa7f"
           },
-          "code": {
+          "date": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-01-01T00:00:00.000Z"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "_id: 630a4ce122d8de88190363c9"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description transaction",
+            "example": "premium"
+          },
+          "category": {
+            "type": "string",
+            "description": "one of salary or extraSalary",
+            "example": "extraSalary"
+          },
+          "sum": {
             "type": "number",
-            "description": "code",
-            "example": "200"
+            "description":"sum description",
+            "example": 6500
           },
-          "data": {
-            "type": "object",
-            "description": "response",
-            "example": {
-              "result": {
-                "_id": "630c6424c4126b2f6d97fa7f",
-                "date": "2022-01-01T00:00:00.000Z",
-                "owner": {
-                  "_id": "630a4ce122d8de88190363c9"
-                },
-                "description": "meat",
-                "category": "products",
-                "sum": 100,
-                "type": "expense",
-                "createdAt": "2022-08-29T07:00:52.786Z",
-                "updatedAt": "2022-08-29T07:00:52.786Z"
-              }
+          "createdAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          } 
+        }
+      },
+      "ExpanseTransactionRequest": {
+        "type": "object",
+        "required": ["date", "description", "category", "sum"],
+        "properties": {
+            "date": {
+              "type": "string",
+              "description": "date",
+              "example": "2022-08-29T00:00:00.000Z"
+            },
+            "description": {
+              "type": "string",
+              "description": "any description",
+              "example": "premium"
+            },
+            "category": {
+              "type": "string",
+              "description": "one of salary or extraSalary",
+              "example": "products"
+            },
+            "sum": {
+              "type": "number",
+              "description": "sum transaction",
+              "example": "6500"
             }
-          }
-        },
-        "example": {
-          "status": "success",
-          "code": 200,
-          "data": {
-            "result": [
-              {
-                "_id": "630c6424c4126b2f6d97fa7f",
-                "date": "2022-01-01T00:00:00.000Z",
-                "owner": {
-                  "_id": "630a4ce122d8de88190363c9"
-                },
-                "description": "meat",
-                "category": "products",
-                "sum": 100,
-                "type": "expense",
-                "createdAt": "2022-08-29T07:00:52.786Z",
-                "updatedAt": "2022-08-29T07:00:52.786Z"
-              },
-              {
-                "_id": "630dd5d7f6a94d02010611f5",
-                "date": "2022-08-29T00:00:00.000Z",
-                "owner": {
-                  "_id": "630a4ce122d8de88190363c9"
-                },
-                "description": "tekila44",
-                "category": "alcohol",
-                "sum": 100,
-                "type": "expense",
-                "createdAt": "2022-08-30T09:18:15.941Z",
-                "updatedAt": "2022-08-30T09:18:15.941Z"
-              }
-            ]
-          }
+        }
+      },
+      "ExpanseTransactionResponse": {
+        "type": "object",
+        "required": ["id", "date", "owner", "sum", "description", "category"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Transaction id",
+            "example": "630c6424c4126b2f6d97fa7f"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-01-01T00:00:00.000Z"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User id",
+            "example": "_id: 630a4ce122d8de88190363c9"
+          },
+          "description": {
+            "type": "string",
+            "description": "Any description",
+            "example": "premium"
+          },
+          "category": {
+            "type": "string",
+            "description": "one of salary or extraSalary",
+            "example": "extraSalary"
+          },
+          "sum": {
+            "type": "number",
+            "description":"sum description",
+            "example": 350
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date transaction",
+            "example": "2022-08-29T07:00:52.786Z"
+          } 
         }
       },
       "DeleteTransactionResponse": {
