@@ -1,10 +1,10 @@
 const queryString = require('query-string');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-const User = require("../models");
+const { User } = require("../models");
 
-const { NODE_ENV, BASE_URL_PROD_BACK, BASE_URL_PROD_FRONT, BASE_URL_DEV_FRONT, BASE_URL_DEV_BACK } = process.env;
-const baseUrlFront = NODE_ENV === "development" ? BASE_URL_DEV_FRONT : BASE_URL_PROD_FRONT;
+const { NODE_ENV, BASE_URL_PROD_BACK, BASE_URL_DEV_BACK } = process.env;
+// const baseUrlFront = NODE_ENV === "development" ? BASE_URL_DEV_FRONT : BASE_URL_PROD_FRONT;
 const baseUrlBack = NODE_ENV === "development" ? BASE_URL_DEV_BACK : BASE_URL_PROD_BACK;
 
 const googleAuth = (req, res) => {
@@ -68,7 +68,7 @@ const googleRedirect = async (req, res) => {
     await addToken(user._id);
   }
 
-  return res.redirect(`${baseUrlFront}?token=${token}`);
+  return res.redirect(`http://kapusta42.netlify.app/auth/google-redirect?token=${token}`);
 };
 
 module.exports = {
