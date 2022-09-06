@@ -69,6 +69,7 @@ const googleRedirect = async (req, res) => {
   }
 
   return res.redirect(`${baseUrlFront}?token=${token}`);
+  
 };
 
 module.exports = {

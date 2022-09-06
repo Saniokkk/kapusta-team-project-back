@@ -20,7 +20,7 @@ class ReportController{
 
         const incomeTransactions = await Income.find({ owner: _id });
 
-        const incomeByMonthAndYear = incomeTransactions.filter(({ date }) => {
+        const incomeForMonthOfYear = incomeTransactions.filter(({ date }) => {
             const operationYear = date.getFullYear().toString();
             const operationMonth = (date.getMonth() + 1).toString();
 
@@ -29,21 +29,21 @@ class ReportController{
             
         const expenseTransactions = await Expense.find({ owner: _id });
 
-        const expenseByMonthAndYear = expenseTransactions.filter(({ date }) => {
+        const expenseForMonthOfYear = expenseTransactions.filter(({ date }) => {
             const operationYear = date.getFullYear().toString();
             const operationMonth = (date.getMonth() + 1).toString();
 
             return operationYear === year && operationMonth === month;
         });
 
-        const totalExpense = expenseByMonthAndYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
-        const totalIncome = incomeByMonthAndYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
+        const totalIncome = incomeForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
+        const totalExpense = expenseForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
 
         res.status(200).json({
             totalIncome,
             totalExpense,
-            incomeByMonthAndYear,
-            expenseByMonthAndYear,
+            incomeForMonthOfYear,
+            expenseForMonthOfYear,
         });
     }
 
@@ -91,8 +91,6 @@ class ReportController{
         }, {});
 
         console.log(expenseByMonthForYear);
-
-
 
         res.status(200).json({
             expenseByMonthForYear

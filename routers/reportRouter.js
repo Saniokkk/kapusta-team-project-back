@@ -9,6 +9,6 @@ router.get("/currentYear-income", auth, ctrlWrapper(ReportController.getIncome))
 
 router.get("/currentYear-expense", auth, ctrlWrapper(ReportController.getExpense));
 
-router.get("/:month/:year", auth, ctrlWrapper(ReportController.getTransaction));
+router.get("byCategory/:month/:year", auth, ctrlWrapper(ReportController.getTransaction));
 
 module.exports = router;
