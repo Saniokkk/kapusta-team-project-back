@@ -36,7 +36,7 @@ const googleRedirect = async (req, res) => {
     data: {
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${process.env.BASE_URL}/api/auth/google-redirect`,
+      redirect_uri: `${baseUrlBack}/api/auth/google-redirect`,
       grant_type: 'authorization_code',
       code,
     },
