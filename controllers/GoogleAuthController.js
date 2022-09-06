@@ -68,7 +68,7 @@ const googleRedirect = async (req, res) => {
     await addToken(user._id);
   }
 
-  return res.redirect(`http://kapusta42.netlify.app/auth/google-redirect?token=${token}`);
+return res.redirect(`${baseUrlFront}/auth/google-redirect?token=${token}`);
 };
 
 module.exports = {
