@@ -14,16 +14,9 @@ const router = express.Router();
 
 router.post("/register", validation(joiUserSchemas.register), ctrlWrapper(AuthController.register));
 
-router.get('/verify/:verificationToken', ctrlWrapper(AuthController.verifyEmail));
-
-// router.get('/verify', ctrlWrapper(ctrl.resendVerifyEmail));
-
 router.post("/login", validation(joiUserSchemas.login), ctrlWrapper(AuthController.login));
 
 router.post("/logout", auth, ctrlWrapper(AuthController.logout));
-
-
-router.get("/current", auth, ctrlWrapper(AuthController.current));
 
 router.get("/google", ctrlWrapper(googleAuth));
 

@@ -14,14 +14,14 @@ class BalanceController {
 
   async updateBalance(req, res) {
     const { _id } = req.user;
+
     const result = await User.findByIdAndUpdate(_id, req.body);
     if (!result) {
       throw createError(404, "User not found");
     }
     const newBalance = await User.findById(_id);
-    res.status(201).json({
-        message: `Balance updated, new balance is: ${newBalance.totalBalance}`,
-      });
+
+    res.status(201).json({newBalance: newBalance.totalBalance});
   }
 }
 

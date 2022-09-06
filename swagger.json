@@ -44,7 +44,7 @@
 
 
   "paths": {
-    "/api/auth/register": {
+    "/api/users/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
@@ -83,39 +83,7 @@
         }
       }
     },
-    "/api/auth/verify/:verificationToken": {
-      "post": {
-        "tags": ["Auth"],
-        "summary": "User verification",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "verificationToken",
-            "required": true,
-            "type": "string",
-            "description": "User's verification token"
-          }
-        ],
-        "security": [],
-        "responses": {
-          "200": {
-            "description": "Verification successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerifyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid verification token)",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/api/auth/login": {
+    "/api/users/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -154,7 +122,7 @@
         }
       }
     },
-    "/api/auth/logout": {
+    "/api/users/logout": {
       "get": {
         "tags": ["Auth"],
         "summary": "User logout",
@@ -176,7 +144,7 @@
         }
       }
     },
-    "/api/user/current": {
+    "/api/users/current": {
       "get": {
         "tags": ["User"],
         "summary": "Get information about the current user",
@@ -399,6 +367,7 @@
       }
     }
   },
+  
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -733,6 +702,37 @@
             "description": "Date transaction",
             "example": "2022-08-29T07:00:52.786Z"
           } 
+        }
+      },
+      "deleteTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "message",
+            "example": "success"
+          },
+          "code": {
+            "type": "number",
+            "description": "code",
+            "example": "200"
+          },
+          "data": {
+            "type": "object",
+            "description": "response",
+            "example": {
+              "message": "Transaction with ID630dd624f6a94d02010611fd deleted",
+              "newBalance": -300
+            }
+          },
+          "example": {
+            "status": "success",
+            "code": 200,
+            "data": {
+              "message": "Transaction with ID630dd624f6a94d02010611fd deleted",
+              "newBalance": -300
+            }
+          }
         }
       },
       "DeleteTransactionResponse": {
