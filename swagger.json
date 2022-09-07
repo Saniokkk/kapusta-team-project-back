@@ -383,39 +383,20 @@
         }
       }
     },
-    "/api/report/currentYear-income": {
+    "/api/report/currentYear/:type": {
       "get": {
         "tags": ["Report"],
-        "summary": "Get a report income for all months of the current year",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReportByMonthForYear"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {}
+        "summary": "Get a report 'income' or 'expense' for all months of the current year",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "type": "string",
+            "description": "On of 'income' or 'expense'",
+            "enum":  [ "income", "expense"]
           }
-        }
-      }
-    },
-    "/api/report/currentYear-expanse": {
-      "get": {
-        "tags": ["Report"],
-        "summary": "Get a report expense for all months of the current year",
-        "parameters": [],
+        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
@@ -462,7 +443,6 @@
           }
         ],
         "security": [{ "Bearer": [] }],
-
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -486,8 +466,6 @@
       }
     }
   },
-  
-  
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -862,38 +840,38 @@
         "type": "object",
         "required": [],
         "properties": {
-          "1": {
-            "type": "number",
+          "Січень": {
+            "type": "string",
             "description": "May",
             "example": 33000
           },
-          "2": {
-            "type": "number",
+          "Лютий": {
+            "type": "string",
             "description": "May",
             "example": 50000
           },
-          "3": {
-            "type": "number",
+          "Березень": {
+            "type": "string",
             "description": "May",
             "example": 17000
           },
-          "4": {
-            "type": "number",
+          "Квітень": {
+            "type": "string",
             "description": "May",
             "example": 28600
           },
-          "5": {
-            "type": "number",
+          "Травень": {
+            "type": "string",
             "description": "May",
             "example": 40000
           },
-          "6": {
-            "type": "number",
+          "Червень": {
+            "type": "string",
             "description": "June",
             "example": 35400
           },
-          "7": {
-            "type": "number",
+          "Липень": {
+            "type": "string",
             "description": "July",
             "example": 25000
         }

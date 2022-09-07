@@ -50,8 +50,7 @@ class TransactionController{
     async removeTransaction(req, res) {
         const { type, transactionId } = req.params;
         const { _id, totalBalance } = req.user;
-        
-        
+
         const { sum } = type === 'income'
         ? await Income.findById(transactionId)
         : await Expense.findById(transactionId);
