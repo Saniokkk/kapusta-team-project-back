@@ -5,10 +5,8 @@ const { ReportController } = require("../controllers");
 
 const router = express.Router();
 
-router.get("/currentYear-income", auth, ctrlWrapper(ReportController.getIncome));
+router.get("/currentYear/:type", auth, ctrlWrapper(ReportController.getReportByMonthsSum));
 
-router.get("/currentYear-expense", auth, ctrlWrapper(ReportController.getExpense));
-
-router.get("byCategory/:month/:year", auth, ctrlWrapper(ReportController.getTransaction));
+router.get("/byCategory/:month/:year", auth, ctrlWrapper(ReportController.getTransaction));
 
 module.exports = router;
