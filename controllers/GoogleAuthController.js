@@ -24,6 +24,7 @@ const googleAuth = (req, res) => {
     `https://accounts.google.com/o/oauth2/v2/auth?${stringifyParams}`,
   );
 };
+console.log(googleAuth);
 
 const googleRedirect = async (req, res) => {
   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;

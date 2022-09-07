@@ -7,11 +7,10 @@ const swaggerDocument = require("./swagger.json");
 
 require("dotenv").config();
 
-// const { application } = require("express");
 
 const {
   authRouter,
-  // googleRouter,
+
   balanceRouter,
   transactionsRouter,
   reportRouter,
