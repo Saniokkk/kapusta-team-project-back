@@ -2,10 +2,10 @@ const createError = require("../helpers/createError");
 const { User, Income, Expense } = require("../models");
 
 class ReportController{
-    async getTransaction(req, res) {
+    async getReportByMonth(req, res) {
         const { _id } = req.user;
         const { month, year } = req.params;
-        console.log('!!!');
+
         const result = await User.findById(
         _id,
         "-createdAt -updatedAt -password -token"
@@ -36,11 +36,22 @@ class ReportController{
         const totalIncome = incomeForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         const totalExpense = expenseForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
 
+        console.log(incomeForMonthOfYear);
+
+        const totalIncomeByCategory = incomeForMonthOfYear.reduce((stack, { category, sum }, index) => {
+            stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
+            return stack
+        }, {});
+        const totalExpanseByCategory = expenseForMonthOfYear.reduce((stack, { category, sum }, index) => {
+            stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
+            return stack
+        }, {});
+
         res.status(200).json({
             totalIncome,
             totalExpense,
-            incomeForMonthOfYear,
-            expenseForMonthOfYear,
+            totalIncomeByCategory,
+            totalExpanseByCategory,
         });
     }
 

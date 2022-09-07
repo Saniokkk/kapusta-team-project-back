@@ -51,23 +51,19 @@ const googleRedirect = async (req, res) => {
   });
 
   const user = await User.findOne({ email: userData.data.email });
-  let token = '';
-
-  const addToken = async id => {
-    token = await jwt.sign({ _id: id }, process.env.SECRET_KEY);
-    await User.findOneAndUpdate({ email: userData.data.email }, { token });
-  };
 
   if (!user) {
     await User.create({
       name: userData.data.name,
       email: userData.data.email,
     });
-    const user = await User.findOne({ email: userData.data.email });
-    await addToken(user._id);
-  } else {
-    await addToken(user._id);
   }
+
+  const client = await User.findOne({ email: userData.data.email });
+  
+  const token = await jwt.sign({ id: client.id }, process.env.SECRET_KEY);
+  
+  await User.findOneAndUpdate({ email: userData.data.email }, { token });
 
   return res.redirect(`${baseUrlFront}/api/auth/google-redirect?token=${token}`);
 

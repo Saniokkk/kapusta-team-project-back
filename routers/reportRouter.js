@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.get("/currentYear/:type", auth, ctrlWrapper(ReportController.getReportByMonthsSum));
 
-router.get("/byCategory/:month/:year", auth, ctrlWrapper(ReportController.getTransaction));
+router.get("/byCategory/:month/:year", auth, ctrlWrapper(ReportController.getReportByMonth));
 
 module.exports = router;
