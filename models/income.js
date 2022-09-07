@@ -19,8 +19,8 @@ const incomeSchema = Schema(
       type: String,
       required: true,
       enum: [
-        "salary",
-        "extraSalary"
+        "Дохід",
+        "Доп.дохід"
       ],
     },
     sum: {
