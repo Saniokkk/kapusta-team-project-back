@@ -20,18 +20,19 @@ class AuthController {
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
     const avatarURL = gravatar.url(email);
 
-    const payload = {
-      id: user._id,
-    };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
-
-
     const result = await User.create({
       email,
       password: hashPassword,
-      avatarURL,
-      token
+      avatarURL,      
     });
+    
+    console.log(result);
+    const payload = {
+      id: result._id,
+    };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
+    await User.findByIdAndUpdate(result._id, { token });
+
     
     res.status(201).json({
       user: {
@@ -65,6 +66,7 @@ class AuthController {
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
     await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({
+        
         user: {
           email,
           token,
