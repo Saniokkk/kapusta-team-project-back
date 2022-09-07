@@ -535,17 +535,17 @@
           "category": {
             "type": "string",
             "description": [
-              "transport",
-              "products",
-              "health",
-              "alcohol",
-              "entertainment",
-              "housing",
-              "technique",
-              "communal, communications",
-              "sports, hobbies",
-              "education",
-              "other"
+              "Транспорт",
+              "Продукти",
+              "Здоров'я",
+              "Алкоголь",
+              "Розваги",
+              "Дім",
+              "Техніка",
+              "Комуналка",
+              "Спорт, хобі",
+              "Освіта",
+              "Інше"
             ],
             "example": "products"
           },
@@ -653,7 +653,7 @@
             "category": {
               "type": "string",
               "description": "one of salary or extraSalary",
-              "example": "extraSalary"
+              "example": "Доп.дохід"
             },
             "sum": {
               "type": "number",
@@ -813,25 +813,25 @@
           "incomeForMonthOfYear": {
             "type": "object",
             "example": {
-              "salary": 40000,
-              "extraSalary": 8500
+              "Дохід": 40000,
+              "Доп.дохід": 8500
             }
           },
           "expenseForMonthOfYear": {
             "type": "object",
             "description": "code",
             "example": {
-              "transport": 3500,
-              "products": 9000,
-              "health": 2000,
-              "alcohol": 0,
-              "entertainment": 3500,
-              "housing": 8000,
-              "technique": 0,
-              "communal, communications": 1750,
-              "sports, hobbies": 1500,
-              "education": 3500,
-              "other": 200
+              "Транспорт": 3500,
+              "Продукти": 9000,
+              "Здоров'я": 2000,
+              "Алкоголь": 0,
+              "Розваги": 3500,
+              "Дім": 8000,
+              "Техніка": 0,
+              "Комуналка": 1750,
+              "Спорт, хобі": 1500,
+              "Освіта": 3500,
+              "Інше": 200
             }
           }
         }
@@ -841,37 +841,37 @@
         "required": [],
         "properties": {
           "Січень": {
-            "type": "string",
+            "type": "number",
             "description": "May",
             "example": 33000
           },
           "Лютий": {
-            "type": "string",
+            "type": "number",
             "description": "May",
             "example": 50000
           },
           "Березень": {
-            "type": "string",
+            "type": "number",
             "description": "May",
             "example": 17000
           },
           "Квітень": {
-            "type": "string",
+            "type": "number",
             "description": "May",
             "example": 28600
           },
           "Травень": {
-            "type": "string",
+            "type": "number",
             "description": "May",
             "example": 40000
           },
           "Червень": {
-            "type": "string",
+            "type": "number",
             "description": "June",
             "example": 35400
           },
           "Липень": {
-            "type": "string",
+            "type": "number",
             "description": "July",
             "example": 25000
         }
