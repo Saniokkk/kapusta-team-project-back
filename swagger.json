@@ -83,33 +83,19 @@
         }
       }
     },
-    "/api/auth/verify/:verificationToken": {
-      "post": {
+    "/api/auth/google": {
+      "get": {
         "tags": ["Auth"],
-        "summary": "User verification",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "verificationToken",
-            "required": true,
-            "type": "string",
-            "description": "User's verification token"
-          }
-        ],
-        "security": [],
+        "summary": "Google registration and authentication(only allowed from 'Kapusta-app' web aplication)",
+        "parameters": [],
+
         "responses": {
           "200": {
-            "description": "Verification successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerifyResponse"
-                }
-              }
-            }
+            "description": "Successful operation (redirect to front-end with accessToken)",
+            "content": {}
           },
-          "400": {
-            "description": "Bad request (invalid verification token)",
+          "403": {
+            "description": "Not registered",
             "content": {}
           }
         }
@@ -211,7 +197,6 @@
         "summary": "Get user balance",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-
         "responses": {
           "201": {
             "description": "Successful operation",
@@ -397,8 +382,112 @@
           }
         }
       }
+    },
+    "/api/report/currentYear-income": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get a report income for all months of the current year",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByMonthForYear"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/currentYear-expanse": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get a report expense for all months of the current year",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByMonthForYear"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/byCategory/:month/:year": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get report ",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "month",
+            "required": true,
+            "type": "number",
+            "description": "Enter the number 1 - 12",
+            "example": 8
+          },
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "number",
+            "description": "Enter the year length 4",
+            "example": 2022
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByCategoryForMonthAndYear"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
     }
   },
+  
+  
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -415,17 +504,6 @@
             "type": "string",
             "description": "User's password",
             "example": "qwerty123"
-          }
-        }
-      },
-      "VerifyResponse":{
-        "type": "object",
-        "required": ["message"],
-        "properties": {
-          "message": {
-            "type": "string",
-            "format": "string",
-            "example": "Verification successful"
           }
         }
       },
@@ -457,7 +535,7 @@
           "totalBalance": {
             "type": "number",
             "description": "User's balance",
-            "example": 11111
+            "example": 5000
           }
         }
       },
@@ -489,9 +567,7 @@
               "communal, communications",
               "sports, hobbies",
               "education",
-              "other",
-              "wages",
-              "income"
+              "other"
             ],
             "example": "products"
           },
@@ -509,39 +585,46 @@
       },
       "RegistrationResponse": {
         "type": "object",
-        "required": ["message", "email"],
-        "properties": {
-          "message": {
-            "type": "string",
-            "format": "string",
-            "example": "Go to your email and confirm registration"
-          },
-          "email": {
-            "type": "string",
-            "description":"User's email",
-            "format": "email"
+        "required": ["user"],
+        "properties":{
+          "user": {
+            "type": "object",
+            "required":["email", "avatarURL", "token"],
+            "properties": {          
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "avatarURL": {
+                  "type": "string",
+                  "example": "www.gravatar.com/avatar/afd5b46d171ec84e3796561ca6d4f4a9"
+                },
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
+                }
+            }
           }
         }
       },
       "LoginResponse": {
         "type": "object",
-        "required": ["token", "user"],
+        "required": ["user"],
         "properties": {
-          "token": {
-            "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
-          },
           "user":{
             "type": "object",
-            "required": ["email"],
+            "required": ["email", "token"],
             "properties":{
               "email": {
                 "type": "string",
                 "example":"example@gmail.com",
                 "format": "email"
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTM3ZThlNTZlY2JiYTJjYTBjNmY2MCIsImlhdCI6MTY2MjIyMjA1MiwiZXhwIjoxNjYyMzA4NDUyfQ.FVVEZEcdKx2VrZqzSY3gQeNbxpblHbt5NjwMzkooNaI"
               }
             }
-          
           }
         }
       },
@@ -569,27 +652,11 @@
       "BalanceResponse": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string",
-            "description": "message",
-            "example": "success"
-          },
-          "code": {
+          "totalBalance":{
             "type": "number",
-            "description": "code",
-            "example": "200"
-          },
-          "data": {
-            "type": "object",
-            "description": "response",
-            "example": {
-              "totalBalance": 5000
-            }
+            "example": 5000
           }
-        },
-        "example": {
-            "totalBalance": 5000
-          }
+        }
       },
       "IncomeTransactionRequest": {
         "type": "object",
@@ -715,7 +782,7 @@
           },
           "category": {
             "type": "string",
-            "description": "one of 'transport', 'products', 'entertainment', 'housing', 'technique', 'communal,communications', 'education', 'other', 'wages', 'income'",
+            "description": "one of 'transport', 'products', 'entertainment', 'housing', 'technique', 'communal,communications', 'education', 'other'",
             "example": "products"
           },
           "sum": {
@@ -750,8 +817,89 @@
             "example": "40000"
           }
         }
+      },
+      "ReportByCategoryForMonthAndYear":{
+        "type": "object",
+        "required": ["totalIncome", "totalExpense", "incomeForMonthOfYear", "expenseForMonthOfYear"],
+        "properties": {
+          "totalIncome": {
+            "type": "number",
+            "description": "message",
+            "example": 48500
+          },
+          "totalExpense": {
+            "type": "number",
+            "description": "code",
+            "example": 32950
+          },
+          "incomeForMonthOfYear": {
+            "type": "object",
+            "example": {
+              "salary": 40000,
+              "extraSalary": 8500
+            }
+          },
+          "expenseForMonthOfYear": {
+            "type": "object",
+            "description": "code",
+            "example": {
+              "transport": 3500,
+              "products": 9000,
+              "health": 2000,
+              "alcohol": 0,
+              "entertainment": 3500,
+              "housing": 8000,
+              "technique": 0,
+              "communal, communications": 1750,
+              "sports, hobbies": 1500,
+              "education": 3500,
+              "other": 200
+            }
+          }
+        }
+      },
+      "ReportByMonthForYear": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "1": {
+            "type": "number",
+            "description": "May",
+            "example": 33000
+          },
+          "2": {
+            "type": "number",
+            "description": "May",
+            "example": 50000
+          },
+          "3": {
+            "type": "number",
+            "description": "May",
+            "example": 17000
+          },
+          "4": {
+            "type": "number",
+            "description": "May",
+            "example": 28600
+          },
+          "5": {
+            "type": "number",
+            "description": "May",
+            "example": 40000
+          },
+          "6": {
+            "type": "number",
+            "description": "June",
+            "example": 35400
+          },
+          "7": {
+            "type": "number",
+            "description": "July",
+            "example": 25000
+        }
       }
-    },
+    }
+  },
 
     "securitySchemes": {
       "Bearer": {
