@@ -2,10 +2,11 @@ const createError = require("../helpers/createError");
 const { User, Income, Expense } = require("../models");
 
 class ReportController{
-    async getReportByMonth(req, res) {
+    async getReportByMonthForYear(req, res) {
+        console.log('MONTH')
         const { _id } = req.user;
         const { month, year } = req.params;
-
+        console.log(month)
         const result = await User.findById(
         _id,
         "-createdAt -updatedAt -password -token"
@@ -36,7 +37,8 @@ class ReportController{
         const totalIncome = incomeForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         const totalExpense = expenseForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
 
-        console.log(incomeForMonthOfYear);
+        // console.log(expenseForMonthOfYear[0].date.getDate());
+        // console.log(expenseForMonthOfYear[6].date.getDate());
 
         const totalIncomeByCategory = incomeForMonthOfYear.reduce((stack, { category, sum }, index) => {
             stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
@@ -58,10 +60,9 @@ class ReportController{
     async getReportByMonthsSum(req, res) {
         const { _id } = req.user;
         const { type } = req.params;
+        console.log(type, '!!!!!');
 
         const currentYear = new Date().getFullYear();
-        console.log(type);
-        console.log(currentYear);
         const report = type === 'income' ? await Income.find({ owner: _id }) : await Expense.find({ owner: _id });
 
         const reportByYear = report.filter(({ date }) => {
@@ -70,7 +71,8 @@ class ReportController{
         });
         
         const reportByMonthForYear = reportByYear.reduce((stack, { date, sum }, index) => {
-            stack[date.getMonth()] ? stack[date.getMonth()] = stack[date.getMonth()] + sum : stack[date.getMonth()] = sum
+            const month = date.getMonth() + 1;
+            stack[month] ? stack[month] = stack[month] + sum : stack[month] = sum
             return stack;
         }, {});
 
@@ -124,6 +126,55 @@ class ReportController{
 
         res.status(200).json({
             [reportByType]: reportByMonthForYearText
+        });
+    }
+
+    async getReportByDay(req, res) {
+
+        const { _id } = req.user;
+        const { data } = req.params;
+        
+        const [year, month, day] = data.split('-');
+        const result = await User.findById(
+        _id,
+        "-createdAt -updatedAt -password -token"
+        );
+
+        if (!result) {
+        throw createError(404, "User not found");
+        }
+
+        const incomeTransactions = await Income.find({ owner: _id });
+
+        console.log(incomeTransactions);
+
+        const incomeByDay = incomeTransactions.filter(({ date }) => {
+            const operationYear = date.getFullYear().toString();
+            const operationMonth = (date.getMonth() + 1).toString();
+            const operationDay = (date.getDate()).toString();
+
+            return operationYear === year && operationMonth === month && operationDay === day;
+        });
+        
+        const expenseTransactions = await Expense.find({ owner: _id });
+        
+
+        console.log(year);
+        console.log(month);
+        console.log(day);
+        
+        const expenseByDay = expenseTransactions.filter(({ date }) => {
+            const operationYear = date.getFullYear().toString();
+            const operationMonth = 0 + (date.getMonth() + 1).toString();
+            const operationDay = (date.getDate()).toString();
+
+            return operationYear === year && operationMonth === month && operationDay === day;
+        });
+
+
+        res.status(200).json({
+            incomeByDay,
+            expenseByDay,
         });
     }
 }

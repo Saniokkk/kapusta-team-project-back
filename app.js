@@ -29,7 +29,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-// app.use("/api/googleauth", googleRouter);
 app.use("/api/balance", balanceRouter);
 app.use("/api/transactions", transactionsRouter);
 app.use("/api/report", reportRouter);
