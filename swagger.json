@@ -299,19 +299,19 @@
         }
       }
     },
-    "/api/transactions/expanse": {
+    "/api/transactions/expense": {
       "post": {
         "tags": ["Transaction"],
-        "summary": "Add expanse transaction",
+        "summary": "Add expense transaction",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Object expanse",
+          "description": "Object expense",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExpanseTransactionRequest"
+                "$ref": "#/components/schemas/ExpenseTransactionRequest"
               }
             }
           }
@@ -339,7 +339,7 @@
         }
       }
     },
-    "/api/transactions/:type/:transactionId": {
+    "/api/transactions/{type}/{transactionId}": {
       "delete": {
         "tags": ["Transaction"],
         "summary": "Remove transaction",
@@ -383,18 +383,17 @@
         }
       }
     },
-    "/api/report/currentYear/:type": {
+    "/api/report/currentYear/{type}": {
       "get": {
         "tags": ["Report"],
         "summary": "Get a report 'income' or 'expense' for all months of the current year",
         "parameters": [
           {
-            "in": "query",
+            "in": "path",
             "name": "type",
             "required": true,
             "type": "string",
-            "description": "On of 'income' or 'expense'",
-            "enum":  [ "income", "expense"]
+            "description": "On of 'income' or 'expense'"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -420,10 +419,10 @@
         }
       }
     },
-    "/api/report/byCategory/:month/:year": {
+    "/api/report/categories/{month}/{year}": {
       "get": {
         "tags": ["Report"],
-        "summary": "Get report ",
+        "summary": "Get a report by category for the month and year",
         "parameters": [
           {
             "in": "path",
@@ -449,7 +448,44 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReportByCategoryForMonthAndYear"
+                  "$ref": "#/components/schemas/ReportByCategoriesForMonthAndYearResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/currentDay/{data}": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get report transactions by current bay ",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "type": "number",
+            "description": "Enter date",
+            "example": "2022-08-23"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByDayResponse"
                 }
               }
             }
@@ -652,7 +688,7 @@
             },
             "category": {
               "type": "string",
-              "description": "one of salary or extraSalary",
+              "description": "one of 'Дохід' or 'Доп.дохід'",
               "example": "Доп.дохід"
             },
             "sum": {
@@ -688,8 +724,8 @@
           },
           "category": {
             "type": "string",
-            "description": "one of 'salary' or 'extraSalary'",
-            "example": "extraSalary"
+            "description": "one of 'Дохід' or 'Доп.дохід'",
+            "example": "Доп.дохід"
           },
           "sum": {
             "type": "number",
@@ -708,7 +744,7 @@
           } 
         }
       },
-      "ExpanseTransactionRequest": {
+      "ExpenseTransactionRequest": {
         "type": "object",
         "required": ["date", "description", "category", "sum"],
         "properties": {
@@ -724,8 +760,8 @@
             },
             "category": {
               "type": "string",
-              "description": "one of salary or extraSalary",
-              "example": "products"
+              "description": "one of 'Транспорт', 'Продукти', 'Здоровя', 'Алкоголь', 'Розваги', 'Дім', 'Техніка', 'Комуналка', 'Спорт, хобі', 'Освіта', 'Інше'",
+              "example": "Продукти"
             },
             "sum": {
               "type": "number",
@@ -760,7 +796,7 @@
           },
           "category": {
             "type": "string",
-            "description": "one of 'transport', 'products', 'entertainment', 'housing', 'technique', 'communal,communications', 'education', 'other'",
+            "description": "one of 'Транспорт', 'Продукти', 'Здоровя', 'Алкоголь', 'Розваги', 'Дім', 'Техніка', 'Комуналка', 'Спорт, хобі', 'Освіта', 'Інше'",
             "example": "products"
           },
           "sum": {
@@ -796,7 +832,7 @@
           }
         }
       },
-      "ReportByCategoryForMonthAndYear":{
+      "ReportByCategoriesForMonthAndYearResponse":{
         "type": "object",
         "required": ["totalIncome", "totalExpense", "incomeForMonthOfYear", "expenseForMonthOfYear"],
         "properties": {
@@ -876,7 +912,54 @@
             "example": 25000
         }
       }
+    },
+    "ReportByDayResponse": {
+      "type": "object",
+      "required": ["incomeByDay", "expenseByDay"],
+      "properties":{
+        "incomeByDay":{
+          "type": "array",
+          "required": [],
+          "description":"Any description",
+          "example":{
+            "_id": "631940a206d99621a33e90d4",
+            "date": "2022-08-20T00:00:00.000Z",
+            "owner": "63193f96df140cc055636ce9",
+            "description": "apple",
+            "category": "Дохід",
+            "sum": 25000,
+            "createdAt": "2022-09-08T01:08:50.156Z",
+            "updatedAt": "2022-09-08T01:08:50.156Z"
+          }
+        },
+          "expenseByDay":{
+            "type": "array",
+            "required": [],
+            "description":"Any description",
+            "example": [{
+              "_id": "2022-09-08T01:08:50.156Z",
+              "date": "2022-08-20T00:00:00.000Z",
+              "owner": "63193f96df140cc055636ce9",
+              "description": "apple",
+              "category": "Продукти",
+              "sum": 2500,
+              "createdAt": "2022-09-08T01:08:50.156Z",
+              "updatedAt": "2022-09-08T01:08:50.156Z"
+          },
+          {
+              "_id": "2022-09-08T01:08:50.156Z",
+              "date": "2022-08-20T00:00:00.000Z",
+              "owner": "63193f96df140cc055636ce9",
+              "description": "apple",
+              "category": "Продукти",
+              "sum": 2500,
+              "createdAt": "2022-09-08T01:08:50.156Z",
+              "updatedAt": "2022-09-08T01:08:50.156Z"
+          }]
+        } 
+      }
     }
+    
   },
 
     "securitySchemes": {
