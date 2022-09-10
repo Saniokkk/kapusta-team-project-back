@@ -1,12 +1,13 @@
 const createError = require("../helpers/createError");
 const { User, Income, Expense } = require("../models");
+// const localizationCategory = require("../helpers/localizationCategory")
 
 class ReportController{
     async getReportByMonthForYear(req, res) {
-        console.log('MONTH')
         const { _id } = req.user;
         const { month, year } = req.params;
-        console.log(month)
+        
+        
         const result = await User.findById(
         _id,
         "-createdAt -updatedAt -password -token"
@@ -33,12 +34,11 @@ class ReportController{
 
             return operationYear === year && operationMonth === month;
         });
-
+        console.log(incomeForMonthOfYear);
+        console.log(expenseForMonthOfYear);
         const totalIncome = incomeForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         const totalExpense = expenseForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
-
-        // console.log(expenseForMonthOfYear[0].date.getDate());
-        // console.log(expenseForMonthOfYear[6].date.getDate());
+        
 
         const totalIncomeByCategory = incomeForMonthOfYear.reduce((stack, { category, sum }, index) => {
             stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
@@ -49,6 +49,8 @@ class ReportController{
             return stack
         }, {});
 
+
+
         res.status(200).json({
             totalIncome,
             totalExpense,
@@ -57,10 +59,26 @@ class ReportController{
         });
     }
 
+    // async getSumAllDescriptionByCategory(req, res) {
+    //     const { _id } = req.user;
+    //     const { category, month, year } = req.params;
+
+    //     const result = await User.findById(
+    //         _id,
+    //         "-createdAt -updatedAt -password -token"
+    //     );
+
+    //     if (!result) {
+    //         throw createError(404, "User not found");
+    //     }
+
+    //     const localCategory = localizationCategory.expense(category);
+
+    // }
+
     async getReportByMonthsSum(req, res) {
         const { _id } = req.user;
         const { type } = req.params;
-        console.log(type, '!!!!!');
 
         const currentYear = new Date().getFullYear();
         const report = type === 'income' ? await Income.find({ owner: _id }) : await Expense.find({ owner: _id });
@@ -132,9 +150,9 @@ class ReportController{
     async getReportByDay(req, res) {
 
         const { _id } = req.user;
-        const { data } = req.params;
+        const { date } = req.params;
         
-        const [year, month, day] = data.split('-');
+        const [year, month, day] = date.split('-');
         const result = await User.findById(
         _id,
         "-createdAt -updatedAt -password -token"
@@ -146,12 +164,10 @@ class ReportController{
 
         const incomeTransactions = await Income.find({ owner: _id });
 
-        console.log(incomeTransactions);
-
         const incomeByDay = incomeTransactions.filter(({ date }) => {
             const operationYear = date.getFullYear().toString();
-            const operationMonth = (date.getMonth() + 1).toString();
-            const operationDay = (date.getDate()).toString();
+            const operationMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+            const operationDay = (date.getDate()).toString().padStart(2, '0');
 
             return operationYear === year && operationMonth === month && operationDay === day;
         });
@@ -159,14 +175,14 @@ class ReportController{
         const expenseTransactions = await Expense.find({ owner: _id });
         
 
-        console.log(year);
-        console.log(month);
-        console.log(day);
+        // console.log(year);
+        // console.log(month);
+        // console.log(day);
         
         const expenseByDay = expenseTransactions.filter(({ date }) => {
             const operationYear = date.getFullYear().toString();
-            const operationMonth = 0 + (date.getMonth() + 1).toString();
-            const operationDay = (date.getDate()).toString();
+            const operationMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+            const operationDay = (date.getDate()).toString().padStart(2, '0');
 
             return operationYear === year && operationMonth === month && operationDay === day;
         });
