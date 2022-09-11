@@ -1,64 +1,57 @@
-const income = (category) => {
-    switch (category) {
-        case "salary":
-            category = "Дохід";
-            break;
-        case "extraSalary":
-            category = "Доп.дохід";
-            break;
-        default: category = null;
-    }
+const func = (category, type) => {
     return {
         category,
-        type: "income",
-    };   
-}
+        type
+    }
+};
 
-const expense = (category) => {
+const localizationCategory = (category) => {
+    let objCategory;
+
     switch (category) {
         case "transport":
-            category = "Транспорт";
+            objCategory = func("Транспорт", "expense");
             break;
         case "products":
-            category = "Продукти";
+            objCategory = func("Продукти", "expense");
             break;
         case "health":
-            category = "Здоровя";
+            objCategory = func("Здоровя", "expense");
             break;
         case "alcohol":
-            category = "Алкоголь";
+            objCategory = func("Алкоголь", "expense");
             break;
         case "entertainment":
-            category = "Розваги";
+            objCategory = func("Розваги", "expense");
             break;
         case "housing":
-            category = "Дім";
+            objCategory = func("Дім", "expense");
             break;
         case "tools":
-            category = "Техніка";
+            objCategory = func("Техніка", "expense");
             break;
         case "invoice":
-            category = "Комуналка";
+            objCategory = func("Комуналка", "expense");
             break;
         case "hobby":
-            category = "Спорт, хобі";
+            objCategory = func("Спорт, хобі", "expense");
             break;
         case "education":
-            category = "Освіта";
+            objCategory = func("Освіта", "expense");
             break;
         case "other":
-            category = "Інше";
+            objCategory = func("Інше", "expense");
+            break;
+        case "salary":
+            objCategory = func("Дохід", "income");
+            break;
+        case "extraSalary":
+            objCategory = func("Доп.дохід", "income");
             break;
         default: category = null;
     }
-    return {
-        category,
-        type: "expense",
-    };    
+    return objCategory;
 }
 
-module.exports = {
-    income,
-    expense,
-}
+module.exports = localizationCategory;
 

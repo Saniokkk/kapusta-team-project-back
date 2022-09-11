@@ -31,7 +31,7 @@ const userSchema = Schema(
 
 const User = model("user", userSchema);
 
-const regVerMeil = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+const regVerMeil = /[^-\\s][a-z0-9\\S]+@[a-z]+\.[a-z]{2,3}/;
 const regPass = /^(?=.*[0-9])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
 const register = Joi.object({
