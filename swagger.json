@@ -419,7 +419,7 @@
         }
       }
     },
-    "/api/report/categories/{month}/{year}": {
+    "/api/report/byCategory/{month}/{year}": {
       "get": {
         "tags": ["Report"],
         "summary": "Get a report by category for the month and year",
@@ -448,7 +448,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReportByCategoriesForMonthAndYearResponse"
+                  "$ref": "#/components/schemas/ReportByCategoryForMonthAndYearResponse"
                 }
               }
             }
@@ -464,10 +464,10 @@
         }
       }
     },
-    "/api/report/currentDay/{data}": {
+    "/api/report/currentDay/{date}": {
       "get": {
         "tags": ["Report"],
-        "summary": "Get report transactions by current bay ",
+        "summary": "Get report transactions by current day ",
         "parameters": [
           {
             "in": "path",
@@ -832,7 +832,7 @@
           }
         }
       },
-      "ReportByCategoriesForMonthAndYearResponse":{
+      "ReportByCategoryForMonthAndYearResponse":{
         "type": "object",
         "required": ["totalIncome", "totalExpense", "incomeForMonthOfYear", "expenseForMonthOfYear"],
         "properties": {

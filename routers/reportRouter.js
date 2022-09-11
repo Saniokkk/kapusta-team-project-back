@@ -5,10 +5,12 @@ const { ReportController } = require("../controllers");
 
 const router = express.Router();
 
-router.get("/categories/:month/:year", auth, ctrlWrapper(ReportController.getReportByMonthForYear));
+router.get("/byCategory/:month/:year", auth, ctrlWrapper(ReportController.getReportByMonthForYear));
+
+router.get("/byCategory/:category/:month/:year", auth, ctrlWrapper(ReportController.getSumAllDescriptionByCategory));
 
 router.get("/currentYear/:type", auth,  ctrlWrapper(ReportController.getReportByMonthsSum));
 
-router.get("/currentDay/:data", auth, ctrlWrapper(ReportController.getReportByDay));
+router.get("/currentDay/:date", auth, ctrlWrapper(ReportController.getReportByDay));
 
 module.exports = router;
