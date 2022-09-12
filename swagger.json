@@ -383,11 +383,18 @@
         }
       }
     },
-    "/api/report/currentYear/{type}": {
+    "/api/report/summaryByMonth/{year}/{type}": {
       "get": {
         "tags": ["Report"],
         "summary": "Get a report 'income' or 'expense' for all months of the current year",
         "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "number",
+            "description": "Enter the year length 4"
+          },
           {
             "in": "path",
             "name": "type",
@@ -404,6 +411,56 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReportByMonthForYear"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/report/amountByDescription/{category}/{month}/{year}": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get a report 'income' or 'expense' for all months of the current year",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category",
+            "required": true,
+            "type": "string",
+            "description": "Enter the category"
+          },
+          {
+            "in": "path",
+            "name": "month",
+            "required": true,
+            "type": "number",
+            "description": "Enter the year length 2"
+          },
+          {
+            "in": "path",
+            "name": "year",
+            "required": true,
+            "type": "number",
+            "description": "Enter the month length 4"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportByDescriptionForMonthResponse"
                 }
               }
             }
@@ -910,6 +967,46 @@
             "type": "number",
             "description": "July",
             "example": 25000
+        }
+      }
+    },
+      "ReportByDescriptionForMonthResponse": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "Продукти": {
+            "type":"object",
+            "required":[],
+            "properties":{
+              "Телятина": {
+                "type": "string",
+                "example": 1300
+              },
+              "Цебуля": {
+                "type": "string",
+                "example": 300
+              },
+              "Морква": {
+                "type": "string",
+                "example": 350
+              },
+              "Риба": {
+                "type": "string",
+                "example": 1500
+              },
+              "Цукерки": {
+                "type": "string",
+                "example": 850
+              },
+              "Вода": {
+                "type": "string",
+                "example": 250
+              },
+              "Фрукти": {
+                "type": "string",
+                "example": 730
+            }
+          }
         }
       }
     },

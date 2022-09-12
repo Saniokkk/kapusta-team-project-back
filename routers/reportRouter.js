@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.get("/byCategory/:month/:year", auth, ctrlWrapper(ReportController.getReportByMonthForYear));
 
-router.get("/byCategory/:category/:month/:year", auth, ctrlWrapper(ReportController.getSumAllDescriptionByCategory));
+router.get("/amountByDescription/:category/:month/:year", auth, ctrlWrapper(ReportController.getSumAllDescriptionByCategory));
 
-router.get("/currentYear/:type", auth,  ctrlWrapper(ReportController.getReportByMonthsSum));
+router.get("/summaryByMonth/:year/:type", auth,  ctrlWrapper(ReportController.getReportByMonthsSum));
 
 router.get("/currentDay/:date", auth, ctrlWrapper(ReportController.getReportByDay));
 

@@ -1,21 +1,10 @@
-const createError = require("../helpers/createError");
-const { User, Income, Expense } = require("../models");
-// const localizationCategory = require("../helpers/localizationCategory")
+const {Income, Expense } = require("../models");
+const localizationCategory = require("../helpers/localizationCategory");
 
 class ReportController{
     async getReportByMonthForYear(req, res) {
         const { _id } = req.user;
         const { month, year } = req.params;
-        
-        
-        const result = await User.findById(
-        _id,
-        "-createdAt -updatedAt -password -token"
-        );
-
-        if (!result) {
-        throw createError(404, "User not found");
-        }
 
         const incomeTransactions = await Income.find({ owner: _id });
 
@@ -34,12 +23,10 @@ class ReportController{
 
             return operationYear === year && operationMonth === month;
         });
-        console.log(incomeForMonthOfYear);
-        console.log(expenseForMonthOfYear);
+
         const totalIncome = incomeForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         const totalExpense = expenseForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         
-
         const totalIncomeByCategory = incomeForMonthOfYear.reduce((stack, { category, sum }, index) => {
             stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
             return stack
@@ -49,8 +36,6 @@ class ReportController{
             return stack
         }, {});
 
-
-
         res.status(200).json({
             totalIncome,
             totalExpense,
@@ -59,33 +44,44 @@ class ReportController{
         });
     }
 
-    // async getSumAllDescriptionByCategory(req, res) {
-    //     const { _id } = req.user;
-    //     const { category, month, year } = req.params;
-
-    //     const result = await User.findById(
-    //         _id,
-    //         "-createdAt -updatedAt -password -token"
-    //     );
-
-    //     if (!result) {
-    //         throw createError(404, "User not found");
-    //     }
-
-    //     const localCategory = localizationCategory.expense(category);
-
-    // }
-
-    async getReportByMonthsSum(req, res) {
+    async getSumAllDescriptionByCategory(req, res) {
         const { _id } = req.user;
-        const { type } = req.params;
-
-        const currentYear = new Date().getFullYear();
-        const report = type === 'income' ? await Income.find({ owner: _id }) : await Expense.find({ owner: _id });
+        const { category, month, year } = req.params;
+        
+        const localCategory = localizationCategory(category);
+        console.log(localCategory);
+        const report = localCategory.type === 'income'
+            ? await Income.find({ owner: _id, category: localCategory.category})
+            : await Expense.find({ owner: _id, category: localCategory.category });
 
         const reportByYear = report.filter(({ date }) => {
             const operationYear = date.getFullYear();
-            return operationYear === currentYear;
+            const operationMonth = (date.getMonth() + 1).toString();
+            return operationMonth=== month && operationYear === year;
+        });
+
+        const reportByMonthForYear = reportByYear.reduce((stack, { description, sum }) => {
+            stack[description] ? stack[description] = stack[description] + sum : stack[description] = sum;
+            return stack;
+        }, {});
+
+        res.status(200).json({
+            reportByMonthForYear
+        });
+    }
+
+    async getReportByMonthsSum(req, res) {
+        const { _id } = req.user;
+        const { type, year } = req.params;
+
+        // const currentYear = new Date().getFullYear();
+        const report = type === 'income'
+            ? await Income.find({ owner: _id })
+            : await Expense.find({ owner: _id });
+
+        const reportByYear = report.filter(({ date }) => {
+            const operationYear = date.getFullYear();
+            return operationYear === year;
         });
         
         const reportByMonthForYear = reportByYear.reduce((stack, { date, sum }, index) => {
@@ -153,15 +149,6 @@ class ReportController{
         const { date } = req.params;
         
         const [year, month, day] = date.split('-');
-        const result = await User.findById(
-        _id,
-        "-createdAt -updatedAt -password -token"
-        );
-
-        if (!result) {
-        throw createError(404, "User not found");
-        }
-
         const incomeTransactions = await Income.find({ owner: _id });
 
         const incomeByDay = incomeTransactions.filter(({ date }) => {
@@ -173,11 +160,6 @@ class ReportController{
         });
         
         const expenseTransactions = await Expense.find({ owner: _id });
-        
-
-        // console.log(year);
-        // console.log(month);
-        // console.log(day);
         
         const expenseByDay = expenseTransactions.filter(({ date }) => {
             const operationYear = date.getFullYear().toString();
