@@ -27,11 +27,11 @@ class ReportController{
         const totalIncome = incomeForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         const totalExpense = expenseForMonthOfYear.reduce((prevValue, { sum }) => prevValue + sum, 0);
         
-        const totalIncomeByCategory = incomeForMonthOfYear.reduce((stack, { category, sum }, index) => {
+        const totalIncomeByCategory = incomeForMonthOfYear.reduce((stack, { category, sum }) => {
             stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
             return stack
         }, {});
-        const totalExpanseByCategory = expenseForMonthOfYear.reduce((stack, { category, sum }, index) => {
+        const totalExpanseByCategory = expenseForMonthOfYear.reduce((stack, { category, sum }) => {
             stack[category] ? stack[category] = stack[category] + sum : stack[category] = sum
             return stack
         }, {});
@@ -49,15 +49,14 @@ class ReportController{
         const { category, month, year } = req.params;
         
         const localCategory = localizationCategory(category);
-        console.log(localCategory);
         const report = localCategory.type === 'income'
-            ? await Income.find({ owner: _id, category: localCategory.category})
+            ? await Income.find({ owner: _id, category: localCategory.category })
             : await Expense.find({ owner: _id, category: localCategory.category });
-
+        
         const reportByYear = report.filter(({ date }) => {
-            const operationYear = date.getFullYear();
+            const operationYear = date.getFullYear().toString();
             const operationMonth = (date.getMonth() + 1).toString();
-            return operationMonth=== month && operationYear === year;
+            return operationMonth === month && operationYear === year;
         });
 
         const reportByMonthForYear = reportByYear.reduce((stack, { description, sum }) => {
@@ -74,13 +73,12 @@ class ReportController{
         const { _id } = req.user;
         const { type, year } = req.params;
 
-        // const currentYear = new Date().getFullYear();
         const report = type === 'income'
             ? await Income.find({ owner: _id })
             : await Expense.find({ owner: _id });
 
         const reportByYear = report.filter(({ date }) => {
-            const operationYear = date.getFullYear();
+            const operationYear = date.getFullYear().toString();
             return operationYear === year;
         });
         
