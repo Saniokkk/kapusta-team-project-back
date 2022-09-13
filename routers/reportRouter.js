@@ -14,3 +14,6 @@ router.get("/summaryByMonth/:year/:type", auth,  ctrlWrapper(ReportController.ge
 router.get("/currentDay/:date", auth, ctrlWrapper(ReportController.getReportByDay));
 
 module.exports = router;
+
+
+
