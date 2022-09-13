@@ -53,23 +53,30 @@ class AuthController {
     }    
 
     const user = await User.findOne({ email });
-    if (!user) {
+    if (!user ) {
       throw createError(401, "Email or password is wrong");
+    }
+    if (!user.password) {
+      throw createError(409, "Your account is registered with Google")
     }
     const comparePassword = bcrypt.compareSync(password, user.password);
     if (!comparePassword) {
       throw createError(401, "Email or password is wrong");
     }
+
+    console.log(user);
     const payload = {
       id: user._id,
     };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
-    await User.findByIdAndUpdate(user._id, { token });
+    const result = await User.findByIdAndUpdate(user._id, { token });
+    console.log(result);
     res.status(200).json({
         
         user: {
           email,
           token,
+          totalBalance: user.totalBalance
       },
     });
   }
